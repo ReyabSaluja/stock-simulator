@@ -14,9 +14,9 @@ public class Stock {
     private String url;
     private ArrayList < StockEntry > stockEntries;
     //----------------------------------------------------------------------------
-    public Stock(String name, String url) {
+    public Stock(String name) {
         this.name = name;
-        this.url = url;
+        this.url = "https://finance.yahoo.com/quote/" + name + "/history?p=" + name;
         try {
             stockEntries = importEntries();
         } catch (IOException e) {
@@ -66,7 +66,9 @@ public class Stock {
     public ArrayList < Double > getClosingPrices() {
         ArrayList < Double > closingPrices = new ArrayList<>();
         for (int numClosingPrices = 0; numClosingPrices < this.stockEntries.size(); numClosingPrices++) {
-            closingPrices.add(Double.valueOf(this.stockEntries.get(numClosingPrices).getClose()));
+            if (this.stockEntries.get(numClosingPrices).getClose() != null) {
+                closingPrices.add(Double.parseDouble(this.stockEntries.get(numClosingPrices).getClose()));
+            }
         }
         return closingPrices;
     }
