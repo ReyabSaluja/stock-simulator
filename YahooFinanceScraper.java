@@ -73,16 +73,16 @@ public class YahooFinanceScraper {
                 startUI.draw(g);
             } else if (state.equalsIgnoreCase(PORTFOLIO)) {
                 portfolioUI.draw(g);
-                portfolioItems[portfolioButtonIndex].setColor(Const.BLUE);
+                ((Button) portfolioItems[portfolioButtonIndex]).setColor(Const.BLUE);
             } else if (state.equalsIgnoreCase(TRADE)) {
                 tradeUI.draw(g);
-                tradeItems[tradeButtonIndex].setColor(Const.BLUE);
+                ((Button) tradeItems[tradeButtonIndex]).setColor(Const.BLUE);
             } else if (state.equalsIgnoreCase(CREATORS)) {
                 creatorsUI.draw(g);
-                creatorsItems[creatorsButtonIndex].setColor(Const.BLUE);
+                ((Button) creatorsItems[creatorsButtonIndex]).setColor(Const.BLUE);
             } else if (state.equalsIgnoreCase(ABOUT)) {
                 aboutUI.draw(g);
-                aboutItems[aboutButtonIndex].setColor(Const.BLUE);
+                ((Button) aboutItems[aboutButtonIndex]).setColor(Const.BLUE);
             }
         }
     }
