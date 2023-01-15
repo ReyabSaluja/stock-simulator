@@ -1,12 +1,12 @@
 import java.io.IOException;
 import java.util.ArrayList;
-
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.JTextField;
 
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Graphics;
-
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.awt.event.MouseEvent;
@@ -22,10 +22,14 @@ public class YahooFinanceScraper {
     static final String CREATORS = "CREATORS";
     static final String ABOUT = "ABOUT";
 
+    
+ 
+
     private JFrame window;
     private JPanel panel;
     private MenuMouseListener menuMouseListener;
     private MenuMotionListener menuMotionListener;
+     
 
     private String state = START;
     //----------------------------------------------------------------------------
@@ -45,6 +49,14 @@ public class YahooFinanceScraper {
         //  Creating Mouse Motion Listener
         menuMotionListener = new MenuMotionListener();
         this.panel.addMouseMotionListener(menuMotionListener);
+        //Setting up graph
+        LineChart chart = new LineChart(new Stock("VOO"));
+        chart.setPreferredSize(new Dimension(1400 ,800));
+        window.add(chart);
+        window.pack();
+
+    
+        //Setting up graph
         this.window.setVisible(true);
     }
     //----------------------------------------------------------------------------
@@ -68,6 +80,8 @@ public class YahooFinanceScraper {
         @Override
         public void paintComponent(Graphics g) {
             super.paintComponent(g);
+            //Draws a rectangle with the text "EXIT" on it
+
             //  Start State
             if (state.equalsIgnoreCase(START)) {
                 startUI.draw(g);
@@ -130,6 +144,7 @@ public class YahooFinanceScraper {
 			hoverButtons(mouseX, mouseY);
         }
     }
+    //----------------------------------------------------------------------------
     //----------------------------------------------------------------------------
     /** 
     *   Check if any button in the current game state menu is colliding with the mouse.
@@ -302,7 +317,7 @@ public class YahooFinanceScraper {
         new Button(new Rect(50, 100, Const.PRIMARYBLACK, 100, 50), new Text(50, 100, "PORTFOLIO", Const.MENU_FONT_S, Const.WHITE, true), MouseEvent.MOUSE_CLICKED, "PORTFOLIO", Const.BLUE, true, true),
         new Button(new Rect(250, 100, Const.PRIMARYBLACK, 100, 50), new Text(250, 100, "TRADE", Const.MENU_FONT_S, Const.WHITE, true), MouseEvent.MOUSE_CLICKED, "TRADE", Const.BLUE, true, true),
         new Button(new Rect(400, 100, Const.PRIMARYBLACK, 100, 50), new Text(400, 100, "CREATORS", Const.MENU_FONT_S, Const.WHITE, true), MouseEvent.MOUSE_CLICKED, "CREATORS", Const.BLUE, true, true),
-        new Button(new Rect(600, 100, Const.PRIMARYBLACK, 100, 50), new Text(600, 100, "ABOUT", Const.MENU_FONT_S, Const.WHITE, true), MouseEvent.MOUSE_CLICKED, "ABOUT", Const.BLUE, true, true)
+        new Button(new Rect(600, 100, Const.PRIMARYBLACK, 100, 50), new Text(600, 100, "ABOUT", Const.MENU_FONT_S, Const.WHITE, true), MouseEvent.MOUSE_CLICKED, "ABOUT", Const.BLUE, true, true),
     };
 
     int tradeButtonIndex = 4;
@@ -342,7 +357,5 @@ public class YahooFinanceScraper {
         YahooFinanceScraper test = new YahooFinanceScraper();
         test.run();
 
-        // Stock appleStock = new Stock("Apple", "https://finance.yahoo.com/quote/NKE/history?p=NKE");
-        // appleStock.printStock();
     }
 }
