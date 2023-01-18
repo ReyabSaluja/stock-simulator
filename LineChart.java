@@ -10,8 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JPanel;
 
-public class LineChart extends JPanel{
-	
+public class LineChart extends JPanel {
 	
 	    private int width = 1400;
 	    private int heigth = 800;

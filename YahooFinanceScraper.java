@@ -2,6 +2,9 @@ import java.io.IOException;
 import java.util.ArrayList;
 import javax.swing.JFrame;
 import javax.swing.JTextField;
+import java.awt.GridBagLayout;
+import java.awt.GridBagConstraints;
+import java.awt.BorderLayout;
 
 import java.awt.Color;
 import java.awt.Dimension;
@@ -25,6 +28,9 @@ public class YahooFinanceScraper {
 
     GraphicalUserInterface startUI, portfolioUI, tradeUI, creatorsUI, aboutUI;
 
+    GridBagLayout gbl;
+    GridBagConstraints gbc;
+
     private JFrame window;
     private MenuMouseListener mouseListener;
     private MenuMotionListener mouseMotionListener;
@@ -47,28 +53,28 @@ public class YahooFinanceScraper {
         this.startUI = new GraphicalUserInterface(0, 0, WIDTH, HEIGHT, Const.PRIMARYBLACK, startItems);
         //  Portfolio Panel Initialization
         this.portfolioUI = new GraphicalUserInterface(0, 0, WIDTH, HEIGHT, Const.PRIMARYBLACK, portfolioItems);
-        searchField = new JTextField("STOCK TICKER");
-        searchField.setFont(Const.MENU_FONT_L);
-        this.portfolioUI.setLayout(null);
-        Dimension s1 = searchField.getPreferredSize();
-        searchField.setBounds(100, 300, s1.width, s1.height);
-        searchField.setEditable(true);
-        portfolioUI.add(searchField);
         //  Trade Panel Initialization
         this.tradeUI = new GraphicalUserInterface(0, 0, WIDTH, HEIGHT, Const.PRIMARYBLACK, tradeItems);
+        // searchField = new JTextField("STOCK TICKER");
+        // searchField.setFont(Const.MENU_FONT_L);
+        // this.tradeUI.setLayout(null);
+        // Dimension s1 = searchField.getPreferredSize();
+        // searchField.setBounds(100, 300, s1.width, s1.height);
+        // searchField.setEditable(true);
+        // tradeUI.add(searchField);
         //  Creators Panel Initialization
         this.creatorsUI = new GraphicalUserInterface(0, 0, WIDTH, HEIGHT, Const.PRIMARYBLACK, creatorsItems);
         //  About Panel Initialization
         this.aboutUI = new GraphicalUserInterface(0, 0, WIDTH, HEIGHT, Const.PRIMARYBLACK, aboutItems);
-
+        //  Graph Initialization
+        LineChart chart = new LineChart(new Stock("AAPL"));
+        chart.setPreferredSize(new Dimension(600 ,400));
+        portfolioUI.setLayout(null);
+        portfolioUI.add(chart);
+        chart.setBounds(300, 300, 600, 400);
+       
+        //  Window
         window.setContentPane(startUI);
-
-        //  Setting up graph
-        // LineChart chart = new LineChart(new Stock("VOO"));
-        // chart.setPreferredSize(new Dimension(1400 ,800));
-        // portfolioUI.add(chart);
-        // window.pack();
-
         this.window.setVisible(true);
     }
     //----------------------------------------------------------------------------
