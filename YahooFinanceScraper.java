@@ -1,7 +1,6 @@
 import java.io.IOException;
 import java.util.ArrayList;
 import javax.swing.JFrame;
-import javax.swing.JPanel;
 import javax.swing.JTextField;
 
 import java.awt.Color;
@@ -16,20 +15,19 @@ public class YahooFinanceScraper {
     static final int HEIGHT = 800;
     static final int DELAY = 10;
 
-	static final String START = "START";
+    static final String START = "START";
     static final String PORTFOLIO = "PORTFOLIO";
     static final String TRADE = "TRADE";
     static final String CREATORS = "CREATORS";
     static final String ABOUT = "ABOUT";
 
-    
- 
+    JTextField searchField;
+
+    GraphicalUserInterface startUI, portfolioUI, tradeUI, creatorsUI, aboutUI;
 
     private JFrame window;
-    private JPanel panel;
-    private MenuMouseListener menuMouseListener;
-    private MenuMotionListener menuMotionListener;
-     
+    private MenuMouseListener mouseListener;
+    private MenuMotionListener mouseMotionListener;
 
     private String state = START;
     //----------------------------------------------------------------------------
@@ -39,64 +37,46 @@ public class YahooFinanceScraper {
         this.window.setSize(WIDTH, HEIGHT);
         this.window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.window.setResizable(false);
+        this.window.setLocationRelativeTo(null);
+        //  Mouse and Mouse Motion Initialization
+        mouseListener = new MenuMouseListener();
+        mouseMotionListener = new MenuMotionListener();
+        this.window.addMouseListener(mouseListener);
+        this.window.addMouseMotionListener(mouseMotionListener);
         //  Start Panel Initialization
-        this.panel = new GraphicsPanel();
-		this.panel.setBackground(Color.BLACK);
-		this.window.add(this.panel);
-        //  Creating Mouse Listener
-        menuMouseListener = new MenuMouseListener();
-        this.panel.addMouseListener(menuMouseListener);
-        //  Creating Mouse Motion Listener
-        menuMotionListener = new MenuMotionListener();
-        this.panel.addMouseMotionListener(menuMotionListener);
-        //Setting up graph
-        LineChart chart = new LineChart(new Stock("VOO"));
-        chart.setPreferredSize(new Dimension(1400 ,800));
-        window.add(chart);
-        window.pack();
+        this.startUI = new GraphicalUserInterface(0, 0, WIDTH, HEIGHT, Const.PRIMARYBLACK, startItems);
+        //  Portfolio Panel Initialization
+        this.portfolioUI = new GraphicalUserInterface(0, 0, WIDTH, HEIGHT, Const.PRIMARYBLACK, portfolioItems);
+        searchField = new JTextField(6);
+        searchField.setFont(Const.MENU_FONT_L);
+        searchField.setLocation(300, 300);
+        portfolioUI.add(searchField);
+        //  Trade Panel Initialization
+        this.tradeUI = new GraphicalUserInterface(0, 0, WIDTH, HEIGHT, Const.PRIMARYBLACK, tradeItems);
+        //  Creators Panel Initialization
+        this.creatorsUI = new GraphicalUserInterface(0, 0, WIDTH, HEIGHT, Const.PRIMARYBLACK, creatorsItems);
+        //  About Panel Initialization
+        this.aboutUI = new GraphicalUserInterface(0, 0, WIDTH, HEIGHT, Const.PRIMARYBLACK, aboutItems);
 
-    
-        //Setting up graph
+        window.setContentPane(startUI);
+
+        //  Setting up graph
+        // LineChart chart = new LineChart(new Stock("VOO"));
+        // chart.setPreferredSize(new Dimension(1400 ,800));
+        // portfolioUI.add(chart);
+        // window.pack();
+
         this.window.setVisible(true);
     }
     //----------------------------------------------------------------------------
     public void run() {
-		//	Main Game Loop
+        //	Main Game Loop
         while (true) {
             try {
                 window.repaint();
                 Thread.sleep(15);
             } catch (Exception e) {
                 System.out.println(e);
-            }
-        }
-    }
-    //----------------------------------------------------------------------------
-    public class GraphicsPanel extends JPanel {
-        GraphicsPanel() {
-            this.setFocusable(true);
-            this.requestFocusInWindow();
-        }
-        @Override
-        public void paintComponent(Graphics g) {
-            super.paintComponent(g);
-            //Draws a rectangle with the text "EXIT" on it
-
-            //  Start State
-            if (state.equalsIgnoreCase(START)) {
-                startUI.draw(g);
-            } else if (state.equalsIgnoreCase(PORTFOLIO)) {
-                portfolioUI.draw(g);
-                ((Button) portfolioItems[portfolioButtonIndex]).setColor(Const.BLUE);
-            } else if (state.equalsIgnoreCase(TRADE)) {
-                tradeUI.draw(g);
-                ((Button) tradeItems[tradeButtonIndex]).setColor(Const.BLUE);
-            } else if (state.equalsIgnoreCase(CREATORS)) {
-                creatorsUI.draw(g);
-                ((Button) creatorsItems[creatorsButtonIndex]).setColor(Const.BLUE);
-            } else if (state.equalsIgnoreCase(ABOUT)) {
-                aboutUI.draw(g);
-                ((Button) aboutItems[aboutButtonIndex]).setColor(Const.BLUE);
             }
         }
     }
@@ -141,18 +121,17 @@ public class YahooFinanceScraper {
             int mouseX = e.getX();
             int mouseY = e.getY();
 
-			hoverButtons(mouseX, mouseY);
+            hoverButtons(mouseX, mouseY);
         }
     }
     //----------------------------------------------------------------------------
-    //----------------------------------------------------------------------------
     /** 
-    *   Check if any button in the current game state menu is colliding with the mouse.
-    *   If so, change the button to its hover color, otherwise, reset the button to the original color.
-	*
-    *   @param mouseX
-    *   @param mouseY
-    */
+     *   Check if any button in the current game state menu is colliding with the mouse.
+     *   If so, change the button to its hover color, otherwise, reset the button to the original color.
+     *
+     *   @param mouseX
+     *   @param mouseY
+     */
     public void hoverButtons(int mouseX, int mouseY) {
         if (state.equalsIgnoreCase(START)) {
             startUI.resetButtons();
@@ -165,7 +144,7 @@ public class YahooFinanceScraper {
                 hoveredButton.hoveredColor();
             }
         } else if (state.equalsIgnoreCase(PORTFOLIO)) {
-            portfolioUI.resetButtons();
+            portfolioUI.resetButtonsExcept(3);
 
             ArrayList < Integer > hoveredButtons = portfolioUI.findCollidedButtons(mouseX, mouseY);
 
@@ -175,7 +154,7 @@ public class YahooFinanceScraper {
                 hoveredButton.hoveredColor();
             }
         } else if (state.equalsIgnoreCase(TRADE)) {
-            tradeUI.resetButtons();
+            tradeUI.resetButtonsExcept(4);
 
             ArrayList < Integer > hoveredButtons = tradeUI.findCollidedButtons(mouseX, mouseY);
 
@@ -185,7 +164,7 @@ public class YahooFinanceScraper {
                 hoveredButton.hoveredColor();
             }
         } else if (state.equalsIgnoreCase(CREATORS)) {
-            creatorsUI.resetButtons();
+            creatorsUI.resetButtonsExcept(5);
 
             ArrayList < Integer > hoveredButtons = creatorsUI.findCollidedButtons(mouseX, mouseY);
 
@@ -195,7 +174,7 @@ public class YahooFinanceScraper {
                 hoveredButton.hoveredColor();
             }
         } else if (state.equalsIgnoreCase(ABOUT)) {
-            aboutUI.resetButtons();
+            aboutUI.resetButtonsExcept(6);
 
             ArrayList < Integer > hoveredButtons = aboutUI.findCollidedButtons(mouseX, mouseY);
 
@@ -261,7 +240,7 @@ public class YahooFinanceScraper {
                     runButtonFunction(ranButton.getButtonFunction());
                 }
             }
-        } 
+        }
     }
     //----------------------------------------------------------------------------
     /** 
@@ -272,85 +251,76 @@ public class YahooFinanceScraper {
     public void runButtonFunction(String buttonFunction) {
         if (buttonFunction.equalsIgnoreCase(START)) {
             state = START;
+            this.window.setContentPane(startUI);
         } else if (buttonFunction.equalsIgnoreCase(PORTFOLIO)) {
             state = PORTFOLIO;
+            this.window.setContentPane(portfolioUI);
+            ((Button) portfolioItems[3]).setTextColor(Const.BLUE);
         } else if (buttonFunction.equalsIgnoreCase(TRADE)) {
             state = TRADE;
+            this.window.setContentPane(tradeUI);
+            ((Button) tradeItems[4]).setTextColor(Const.BLUE);
         } else if (buttonFunction.equalsIgnoreCase(CREATORS)) {
             state = CREATORS;
+            this.window.setContentPane(creatorsUI);
+            ((Button) creatorsItems[5]).setTextColor(Const.BLUE);
         } else if (buttonFunction.equalsIgnoreCase(ABOUT)) {
             state = ABOUT;
-        } 
+            this.window.setContentPane(aboutUI);
+            ((Button) aboutItems[6]).setTextColor(Const.BLUE);
+        }
     }
     //----------------------------------------------------------------------------
     //  Graphical User Interfaces
-	GraphicalUserInterfaceItem[] startItems = {
+    GraphicalUserInterfaceItem[] startItems = {
         new Image(0, 0, Const.GUI_START_IMAGE),
         new Text(50, 15, "Stock", Const.MENU_FONT_XL, Const.WHITE, true),
         new Text(195, 15, "Scraper", Const.MENU_FONT_XL_BOLD, Const.BLUE, true),
-        new Button(new Rect(50, 100, Const.PRIMARYBLACK, 100, 50), new Text(50, 100, "PORTFOLIO", Const.MENU_FONT_S, Const.WHITE, true), MouseEvent.MOUSE_CLICKED, "PORTFOLIO", Const.BLUE, true, true),
-        new Button(new Rect(250, 100, Const.PRIMARYBLACK, 100, 50), new Text(250, 100, "TRADE", Const.MENU_FONT_S, Const.WHITE, true), MouseEvent.MOUSE_CLICKED, "TRADE", Const.BLUE, true, true),
-        new Button(new Rect(400, 100, Const.PRIMARYBLACK, 100, 50), new Text(400, 100, "CREATORS", Const.MENU_FONT_S, Const.WHITE, true), MouseEvent.MOUSE_CLICKED, "CREATORS", Const.BLUE, true, true),
-        new Button(new Rect(600, 100, Const.PRIMARYBLACK, 100, 50), new Text(600, 100, "ABOUT", Const.MENU_FONT_S, Const.WHITE, true), MouseEvent.MOUSE_CLICKED, "ABOUT", Const.BLUE, true, true)
+        new Button(new Rect(50, 100, Const.SECONDARYBLACK, 100, 50), new Text(50, 100, PORTFOLIO, Const.MENU_FONT_S, Const.WHITE, true), MouseEvent.MOUSE_CLICKED, PORTFOLIO, Const.BLUE, true, true),
+        new Button(new Rect(250, 100, Const.SECONDARYBLACK, 100, 50), new Text(250, 100, TRADE, Const.MENU_FONT_S, Const.WHITE, true), MouseEvent.MOUSE_CLICKED, TRADE, Const.BLUE, true, true),
+        new Button(new Rect(400, 100, Const.SECONDARYBLACK, 100, 50), new Text(400, 100, CREATORS, Const.MENU_FONT_S, Const.WHITE, true), MouseEvent.MOUSE_CLICKED, CREATORS, Const.BLUE, true, true),
+        new Button(new Rect(600, 100, Const.SECONDARYBLACK, 100, 50), new Text(600, 100, ABOUT, Const.MENU_FONT_S, Const.WHITE, true), MouseEvent.MOUSE_CLICKED, ABOUT, Const.BLUE, true, true)
     };
-	
-	GraphicalUserInterface startUI = new GraphicalUserInterface(0, 0, WIDTH, HEIGHT, Color.BLACK, startItems);
 
     GraphicalUserInterfaceItem[] portfolioItems = {
         new Image(0, 0, Const.GUI_START_IMAGE),
         new Text(50, 15, "Stock", Const.MENU_FONT_XL, Const.WHITE, true),
         new Text(195, 15, "Scraper", Const.MENU_FONT_XL_BOLD, Const.BLUE, true),
-        new Button(new Rect(50, 100, Const.PRIMARYBLACK, 100, 50), new Text(50, 100, "PORTFOLIO", Const.MENU_FONT_S, Const.WHITE, true), MouseEvent.MOUSE_CLICKED, "PORTFOLIO", Const.BLUE, true, true),
-        new Button(new Rect(250, 100, Const.PRIMARYBLACK, 100, 50), new Text(250, 100, "TRADE", Const.MENU_FONT_S, Const.WHITE, true), MouseEvent.MOUSE_CLICKED, "TRADE", Const.BLUE, true, true),
-        new Button(new Rect(400, 100, Const.PRIMARYBLACK, 100, 50), new Text(400, 100, "CREATORS", Const.MENU_FONT_S, Const.WHITE, true), MouseEvent.MOUSE_CLICKED, "CREATORS", Const.BLUE, true, true),
-        new Button(new Rect(600, 100, Const.PRIMARYBLACK, 100, 50), new Text(600, 100, "ABOUT", Const.MENU_FONT_S, Const.WHITE, true), MouseEvent.MOUSE_CLICKED, "ABOUT", Const.BLUE, true, true)
+        new Button(new Rect(50, 100, Const.SECONDARYBLACK, 100, 50), new Text(50, 100, PORTFOLIO, Const.MENU_FONT_S, Const.WHITE, true), MouseEvent.MOUSE_CLICKED, PORTFOLIO, Const.BLUE, true, true),
+        new Button(new Rect(250, 100, Const.SECONDARYBLACK, 100, 50), new Text(250, 100, TRADE, Const.MENU_FONT_S, Const.WHITE, true), MouseEvent.MOUSE_CLICKED, TRADE, Const.BLUE, true, true),
+        new Button(new Rect(400, 100, Const.SECONDARYBLACK, 100, 50), new Text(400, 100, CREATORS, Const.MENU_FONT_S, Const.WHITE, true), MouseEvent.MOUSE_CLICKED, CREATORS, Const.BLUE, true, true),
+        new Button(new Rect(600, 100, Const.SECONDARYBLACK, 100, 50), new Text(600, 100, ABOUT, Const.MENU_FONT_S, Const.WHITE, true), MouseEvent.MOUSE_CLICKED, ABOUT, Const.BLUE, true, true)
     };
-
-    int portfolioButtonIndex = 3;
-
-    GraphicalUserInterface portfolioUI = new GraphicalUserInterface(0, 0, WIDTH, HEIGHT, Color.BLACK, portfolioItems);
 
     GraphicalUserInterfaceItem[] tradeItems = {
         new Image(0, 0, Const.GUI_START_IMAGE),
         new Text(50, 15, "Stock", Const.MENU_FONT_XL, Const.WHITE, true),
         new Text(195, 15, "Scraper", Const.MENU_FONT_XL_BOLD, Const.BLUE, true),
-        new Button(new Rect(50, 100, Const.PRIMARYBLACK, 100, 50), new Text(50, 100, "PORTFOLIO", Const.MENU_FONT_S, Const.WHITE, true), MouseEvent.MOUSE_CLICKED, "PORTFOLIO", Const.BLUE, true, true),
-        new Button(new Rect(250, 100, Const.PRIMARYBLACK, 100, 50), new Text(250, 100, "TRADE", Const.MENU_FONT_S, Const.WHITE, true), MouseEvent.MOUSE_CLICKED, "TRADE", Const.BLUE, true, true),
-        new Button(new Rect(400, 100, Const.PRIMARYBLACK, 100, 50), new Text(400, 100, "CREATORS", Const.MENU_FONT_S, Const.WHITE, true), MouseEvent.MOUSE_CLICKED, "CREATORS", Const.BLUE, true, true),
-        new Button(new Rect(600, 100, Const.PRIMARYBLACK, 100, 50), new Text(600, 100, "ABOUT", Const.MENU_FONT_S, Const.WHITE, true), MouseEvent.MOUSE_CLICKED, "ABOUT", Const.BLUE, true, true),
+        new Button(new Rect(50, 100, Const.SECONDARYBLACK, 100, 50), new Text(50, 100, PORTFOLIO, Const.MENU_FONT_S, Const.WHITE, true), MouseEvent.MOUSE_CLICKED, "PORTFOLIO", Const.BLUE, true, true),
+        new Button(new Rect(250, 100, Const.SECONDARYBLACK, 100, 50), new Text(250, 100, TRADE, Const.MENU_FONT_S, Const.WHITE, true), MouseEvent.MOUSE_CLICKED, "TRADE", Const.BLUE, true, true),
+        new Button(new Rect(400, 100, Const.SECONDARYBLACK, 100, 50), new Text(400, 100, CREATORS, Const.MENU_FONT_S, Const.WHITE, true), MouseEvent.MOUSE_CLICKED, "CREATORS", Const.BLUE, true, true),
+        new Button(new Rect(600, 100, Const.SECONDARYBLACK, 100, 50), new Text(600, 100, ABOUT, Const.MENU_FONT_S, Const.WHITE, true), MouseEvent.MOUSE_CLICKED, "ABOUT", Const.BLUE, true, true),
     };
-
-    int tradeButtonIndex = 4;
-
-    GraphicalUserInterface tradeUI = new GraphicalUserInterface(0, 0, WIDTH, HEIGHT, Color.BLACK, tradeItems);
 
     GraphicalUserInterfaceItem[] creatorsItems = {
         new Image(0, 0, Const.GUI_START_IMAGE),
         new Text(50, 15, "Stock", Const.MENU_FONT_XL, Const.WHITE, true),
         new Text(195, 15, "Scraper", Const.MENU_FONT_XL_BOLD, Const.BLUE, true),
-        new Button(new Rect(50, 100, Const.PRIMARYBLACK, 100, 50), new Text(50, 100, "PORTFOLIO", Const.MENU_FONT_S, Const.WHITE, true), MouseEvent.MOUSE_CLICKED, "PORTFOLIO", Const.BLUE, true, true),
-        new Button(new Rect(250, 100, Const.PRIMARYBLACK, 100, 50), new Text(250, 100, "TRADE", Const.MENU_FONT_S, Const.WHITE, true), MouseEvent.MOUSE_CLICKED, "TRADE", Const.BLUE, true, true),
-        new Button(new Rect(400, 100, Const.PRIMARYBLACK, 100, 50), new Text(400, 100, "CREATORS", Const.MENU_FONT_S, Const.WHITE, true), MouseEvent.MOUSE_CLICKED, "CREATORS", Const.BLUE, true, true),
-        new Button(new Rect(600, 100, Const.PRIMARYBLACK, 100, 50), new Text(600, 100, "ABOUT", Const.MENU_FONT_S, Const.WHITE, true), MouseEvent.MOUSE_CLICKED, "ABOUT", Const.BLUE, true, true)
+        new Button(new Rect(50, 100, Const.SECONDARYBLACK, 100, 50), new Text(50, 100, PORTFOLIO, Const.MENU_FONT_S, Const.WHITE, true), MouseEvent.MOUSE_CLICKED, PORTFOLIO, Const.BLUE, true, true),
+        new Button(new Rect(250, 100, Const.SECONDARYBLACK, 100, 50), new Text(250, 100, TRADE, Const.MENU_FONT_S, Const.WHITE, true), MouseEvent.MOUSE_CLICKED, TRADE, Const.BLUE, true, true),
+        new Button(new Rect(400, 100, Const.SECONDARYBLACK, 100, 50), new Text(400, 100, CREATORS, Const.MENU_FONT_S, Const.WHITE, true), MouseEvent.MOUSE_CLICKED, CREATORS, Const.BLUE, true, true),
+        new Button(new Rect(600, 100, Const.SECONDARYBLACK, 100, 50), new Text(600, 100, ABOUT, Const.MENU_FONT_S, Const.WHITE, true), MouseEvent.MOUSE_CLICKED, ABOUT, Const.BLUE, true, true)
     };
-
-    int creatorsButtonIndex = 5;
-
-    GraphicalUserInterface creatorsUI = new GraphicalUserInterface(0, 0, WIDTH, HEIGHT, Color.BLACK, creatorsItems);
 
     GraphicalUserInterfaceItem[] aboutItems = {
         new Image(0, 0, Const.GUI_START_IMAGE),
         new Text(50, 15, "Stock", Const.MENU_FONT_XL, Const.WHITE, true),
         new Text(195, 15, "Scraper", Const.MENU_FONT_XL_BOLD, Const.BLUE, true),
-        new Button(new Rect(50, 100, Const.PRIMARYBLACK, 100, 50), new Text(50, 100, "PORTFOLIO", Const.MENU_FONT_S, Const.WHITE, true), MouseEvent.MOUSE_CLICKED, "PORTFOLIO", Const.BLUE, true, true),
-        new Button(new Rect(250, 100, Const.PRIMARYBLACK, 100, 50), new Text(250, 100, "TRADE", Const.MENU_FONT_S, Const.WHITE, true), MouseEvent.MOUSE_CLICKED, "TRADE", Const.BLUE, true, true),
-        new Button(new Rect(400, 100, Const.PRIMARYBLACK, 100, 50), new Text(400, 100, "CREATORS", Const.MENU_FONT_S, Const.WHITE, true), MouseEvent.MOUSE_CLICKED, "CREATORS", Const.BLUE, true, true),
-        new Button(new Rect(600, 100, Const.PRIMARYBLACK, 100, 50), new Text(600, 100, "ABOUT", Const.MENU_FONT_S, Const.WHITE, true), MouseEvent.MOUSE_CLICKED, "ABOUT", Const.BLUE, true, true)
+        new Button(new Rect(50, 100, Const.SECONDARYBLACK, 100, 50), new Text(50, 100, PORTFOLIO, Const.MENU_FONT_S, Const.WHITE, true), MouseEvent.MOUSE_CLICKED, PORTFOLIO, Const.BLUE, true, true),
+        new Button(new Rect(250, 100, Const.SECONDARYBLACK, 100, 50), new Text(250, 100, TRADE, Const.MENU_FONT_S, Const.WHITE, true), MouseEvent.MOUSE_CLICKED, TRADE, Const.BLUE, true, true),
+        new Button(new Rect(400, 100, Const.SECONDARYBLACK, 100, 50), new Text(400, 100, CREATORS, Const.MENU_FONT_S, Const.WHITE, true), MouseEvent.MOUSE_CLICKED, CREATORS, Const.BLUE, true, true),
+        new Button(new Rect(600, 100, Const.SECONDARYBLACK, 100, 50), new Text(600, 100, ABOUT, Const.MENU_FONT_S, Const.WHITE, true), MouseEvent.MOUSE_CLICKED, ABOUT, Const.BLUE, true, true)
     };
-
-    int aboutButtonIndex = 6;
-
-    GraphicalUserInterface aboutUI = new GraphicalUserInterface(0, 0, WIDTH, HEIGHT, Color.BLACK, aboutItems);
     //----------------------------------------------------------------------------
     public static void main(String[] args) throws IOException {
 

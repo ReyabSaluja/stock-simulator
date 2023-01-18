@@ -2,7 +2,10 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.util.ArrayList;
 
-public class GraphicalUserInterface {
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+
+public class GraphicalUserInterface extends JPanel {
     private int x;
     private int y;
     private int width;
@@ -17,6 +20,9 @@ public class GraphicalUserInterface {
         this.width = 0;
         this.height = 0;
         this.backgroundColor = Color.BLACK;
+
+        this.setFocusable(true);
+        this.requestFocusInWindow();
     }
     GraphicalUserInterface(int x, int y, int width, int height, Color backgroundColor, GraphicalUserInterfaceItem[] guiItems) {
         this.x = x;
@@ -25,6 +31,9 @@ public class GraphicalUserInterface {
         this.height = height;
         this.backgroundColor = backgroundColor;
         this.guiItems = guiItems;
+
+        this.setFocusable(true);
+        this.requestFocusInWindow();
     }
     //------------------------------------------------------------------------------   
     public int getX() {
@@ -62,12 +71,22 @@ public class GraphicalUserInterface {
     public GraphicalUserInterfaceItem getMenuItem(int index) {
         return this.guiItems[index];
     }
+
+    public Color getBackgroundColor() {
+        return this.backgroundColor;
+    }
+
+    public void setBackgroundColor(Color newBackgroundColor) {
+        this.backgroundColor = newBackgroundColor;
+    }
     //----------------------------------------------------------------------------
     /** 
-     * Draws the menu onto a Graphics panel.
-     * @param g
+     *  Draws the menu onto a Graphics panel.
+     *  @param g
      */
-    public void draw(Graphics g) {
+    @Override
+    public void paintComponent(Graphics g) {
+        super.paintComponent(g);
         g.setColor(this.backgroundColor);
         g.fillRect(this.x, this.y, this.width, this.height);
 
@@ -77,7 +96,7 @@ public class GraphicalUserInterface {
     }
     //----------------------------------------------------------------------------
     /**
-     * Resets the color to the original of all the buttons inside the menu.
+     *  Resets the color to the original of all the buttons inside the menu.
      */
     public void resetButtons() {
         for (int menuItemIndex = 0; menuItemIndex < guiItems.length; menuItemIndex++) {
@@ -86,12 +105,32 @@ public class GraphicalUserInterface {
             }
         }
     }
+    /**
+     *  Resets the color to the original of all the buttons 
+     *  inside the menu except for an excluded button
+     * 
+     *  @param excludedButtonIndex
+     *  @see resetButtons()
+     */
+    public void resetButtonsExcept(int excludedButtonIndex) {
+        for (int menuItemIndex = 0; menuItemIndex < excludedButtonIndex; menuItemIndex++) {
+            if (guiItems[menuItemIndex] instanceof Button) {
+                ((Button) guiItems[menuItemIndex]).resetColor();
+            }
+        }
+
+        for (int menuItemIndex = excludedButtonIndex + 1; menuItemIndex < guiItems.length; menuItemIndex++) {
+            if (guiItems[menuItemIndex] instanceof Button) {
+                ((Button) guiItems[menuItemIndex]).resetColor();
+            }
+        }
+    }
     //---------------------------------------------------------------------------- 
     /** 
-     * Find all the buttons inside the menu that collided with the passed coordinate.
-     * @param x
-     * @param y
-     * @return ArrayList<Integer>
+     *  Find all the buttons inside the menu that collided with the passed coordinate.
+     *  @param x
+     *  @param y
+     *  @return ArrayList<Integer>
      */
     public ArrayList < Integer > findCollidedButtons(int x, int y) {
         ArrayList < Integer > collidedButtons = new ArrayList < Integer > ();
@@ -100,7 +139,7 @@ public class GraphicalUserInterface {
             if (guiItems[menuItemIndex] instanceof Button) {
                 Button menuButton = (Button) guiItems[menuItemIndex];
 
-                if (menuButton.inside(x, y)) {
+                if (menuButton.inside(x, y - 30)) {
                     collidedButtons.add(menuItemIndex);
                 }
             }
