@@ -12,8 +12,6 @@ import javax.swing.JPanel;
 
 public class LineChart extends JPanel {
 	
-	    private int width = 1400;
-	    private int heigth = 800;
 	    private int padding = 25;
 	    private int labelPadding = 25;
 	    // private Color lineColor = new Color(44, 102, 230, 180);
