@@ -50,29 +50,28 @@ public class YahooFinanceScraper {
         mouseMotionListener = new MenuMotionListener();
         this.window.addMouseListener(mouseListener);
         this.window.addMouseMotionListener(mouseMotionListener);
-        //  Start Panel Initialization
+        //  Panels Initialization
         this.startUI = new GraphicalUserInterface(0, 0, WIDTH, HEIGHT, Const.PRIMARYBLACK, startItems);
-        //  Portfolio Panel Initialization
         this.portfolioUI = new GraphicalUserInterface(0, 0, WIDTH, HEIGHT, Const.PRIMARYBLACK, portfolioItems);
-        //  Trade Panel Initialization
         this.tradeUI = new GraphicalUserInterface(0, 0, WIDTH, HEIGHT, Const.PRIMARYBLACK, tradeItems);
+        this.creatorsUI = new GraphicalUserInterface(0, 0, WIDTH, HEIGHT, Const.PRIMARYBLACK, creatorsItems);
+        this.aboutUI = new GraphicalUserInterface(0, 0, WIDTH, HEIGHT, Const.PRIMARYBLACK, aboutItems);
+        //  Search Field Initialization
         this.searchField = new JTextField("STOCK TICKER");
         this.searchField.setFont(Const.MENU_FONT_L);
-        this.tradeUI.setLayout(null);
         Dimension searchFieldDimensions = searchField.getPreferredSize();
-        this.searchField.setBounds(100, 300, searchFieldDimensions.width, searchFieldDimensions.height);
+        this.searchField.setBounds(150, 200, searchFieldDimensions.width, searchFieldDimensions.height);
         this.searchField.setEditable(true);
+        //  Adding Search Field to Trade UI
+        this.tradeUI.setLayout(null);
         this.tradeUI.add(searchField);
-        //  Creators Panel Initialization
-        this.creatorsUI = new GraphicalUserInterface(0, 0, WIDTH, HEIGHT, Const.PRIMARYBLACK, creatorsItems);
-        //  About Panel Initialization
-        this.aboutUI = new GraphicalUserInterface(0, 0, WIDTH, HEIGHT, Const.PRIMARYBLACK, aboutItems);
         //  Graph Initialization
         this.chart = new LineChart(new Stock("NKE"));
-        this.chart.setPreferredSize(new Dimension(600 ,400));
+        this.chart.setPreferredSize(new Dimension(600, 400));
+        this.chart.setBounds(300, 300, 600, 400);
+        //  Adding Chart to Trade UI
         this.tradeUI.setLayout(null);
         this.tradeUI.add(chart);
-        this.chart.setBounds(300, 300, 600, 400);
         //  Window
         window.setContentPane(startUI);
         this.window.setVisible(true);

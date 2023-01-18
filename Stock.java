@@ -28,15 +28,15 @@ public class Stock {
     //-----------------------------------------------------------------------------
     //  Function to import all of the stock entries into the stock by webscraping them from Yahoo Finance
     private ArrayList < StockEntry > importEntries() throws IOException {
-        Document doc = Jsoup.connect(url).get();                              		//  Connecting to the webpage via JSoup
-		/*
-		 *	Assigning the stock history to a variable using the stock history table HTML id
-		 *	Assigning each row from the stock history table to a variable
-		 */
+        Document doc = Jsoup.connect(url).get(); //  Connecting to the webpage via JSoup
+        /*
+         *	Assigning the stock history to a variable using the stock history table HTML id
+         *	Assigning each row from the stock history table to a variable
+         */
         Element table = doc.getElementById("Col1-1-HistoricalDataTable-Proxy");
         Elements rows = table.select("tr");
 
-        Elements first = rows.get(0).select("th, td");				//	Assigning the first row from the HTML table
+        Elements first = rows.get(0).select("th, td"); //	Assigning the first row from the HTML table
         List < String > headers = new ArrayList < > ();
 
         ArrayList < StockEntry > stockEntries = new ArrayList < > ();
@@ -66,7 +66,7 @@ public class Stock {
     }
 
     public ArrayList < Double > getClosingPrices() {
-        ArrayList < Double > closingPrices = new ArrayList<>();
+        ArrayList < Double > closingPrices = new ArrayList < > ();
         for (int numClosingPrices = 0; numClosingPrices < this.stockEntries.size(); numClosingPrices++) {
             if (this.stockEntries.get(numClosingPrices).getClose() != null) {
                 closingPrices.add(Double.parseDouble(this.stockEntries.get(numClosingPrices).getClose()));
