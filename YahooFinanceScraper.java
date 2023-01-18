@@ -25,6 +25,7 @@ public class YahooFinanceScraper {
     static final String ABOUT = "ABOUT";
 
     JTextField searchField;
+    LineChart chart;
 
     GraphicalUserInterface startUI, portfolioUI, tradeUI, creatorsUI, aboutUI;
 
@@ -55,24 +56,23 @@ public class YahooFinanceScraper {
         this.portfolioUI = new GraphicalUserInterface(0, 0, WIDTH, HEIGHT, Const.PRIMARYBLACK, portfolioItems);
         //  Trade Panel Initialization
         this.tradeUI = new GraphicalUserInterface(0, 0, WIDTH, HEIGHT, Const.PRIMARYBLACK, tradeItems);
-        // searchField = new JTextField("STOCK TICKER");
-        // searchField.setFont(Const.MENU_FONT_L);
-        // this.tradeUI.setLayout(null);
-        // Dimension s1 = searchField.getPreferredSize();
-        // searchField.setBounds(100, 300, s1.width, s1.height);
-        // searchField.setEditable(true);
-        // tradeUI.add(searchField);
+        this.searchField = new JTextField("STOCK TICKER");
+        this.searchField.setFont(Const.MENU_FONT_L);
+        this.tradeUI.setLayout(null);
+        Dimension searchFieldDimensions = searchField.getPreferredSize();
+        this.searchField.setBounds(100, 300, searchFieldDimensions.width, searchFieldDimensions.height);
+        this.searchField.setEditable(true);
+        this.tradeUI.add(searchField);
         //  Creators Panel Initialization
         this.creatorsUI = new GraphicalUserInterface(0, 0, WIDTH, HEIGHT, Const.PRIMARYBLACK, creatorsItems);
         //  About Panel Initialization
         this.aboutUI = new GraphicalUserInterface(0, 0, WIDTH, HEIGHT, Const.PRIMARYBLACK, aboutItems);
         //  Graph Initialization
-        LineChart chart = new LineChart(new Stock("AAPL"));
-        chart.setPreferredSize(new Dimension(600 ,400));
-        portfolioUI.setLayout(null);
-        portfolioUI.add(chart);
-        chart.setBounds(300, 300, 600, 400);
-       
+        this.chart = new LineChart(new Stock("NKE"));
+        this.chart.setPreferredSize(new Dimension(600 ,400));
+        this.tradeUI.setLayout(null);
+        this.tradeUI.add(chart);
+        this.chart.setBounds(300, 300, 600, 400);
         //  Window
         window.setContentPane(startUI);
         this.window.setVisible(true);
