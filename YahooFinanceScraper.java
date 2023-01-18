@@ -47,9 +47,9 @@ public class YahooFinanceScraper {
         this.startUI = new GraphicalUserInterface(0, 0, WIDTH, HEIGHT, Const.PRIMARYBLACK, startItems);
         //  Portfolio Panel Initialization
         this.portfolioUI = new GraphicalUserInterface(0, 0, WIDTH, HEIGHT, Const.PRIMARYBLACK, portfolioItems);
-        //------------------------------
         searchField = new JTextField("STOCK TICKER");
-        this.window.setLayout(null);
+        searchField.setFont(Const.MENU_FONT_L);
+        this.portfolioUI.setLayout(null);
         Dimension s1 = searchField.getPreferredSize();
         searchField.setBounds(100, 300, s1.width, s1.height);
         searchField.setEditable(true);
