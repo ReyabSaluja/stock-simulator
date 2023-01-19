@@ -74,9 +74,10 @@ public class YahooFinanceScraper {
 
 
 
-
         //  Adding Search Field to Trade UI
         this.tradeUI.setLayout(null);
+        Dimension searchFieldDimension = this.searchField.getPreferredSize();
+        this.searchField.setBounds(200, 200, searchFieldDimension.width, searchFieldDimension.height);
         this.tradeUI.add(searchField);
         //  Graph Initialization
         this.chart = new LineChart(new Stock("NKE"));
