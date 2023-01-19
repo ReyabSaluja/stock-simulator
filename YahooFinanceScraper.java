@@ -57,11 +57,9 @@ public class YahooFinanceScraper {
         this.creatorsUI = new GraphicalUserInterface(0, 0, WIDTH, HEIGHT, Const.PRIMARYBLACK, creatorsItems);
         this.aboutUI = new GraphicalUserInterface(0, 0, WIDTH, HEIGHT, Const.PRIMARYBLACK, aboutItems);
         //  Search Field Initialization
-        this.searchField = new JTextField("STOCK TICKER");
-        this.searchField.setFont(Const.MENU_FONT_L);
+        this.searchField = new JTextField("Enter Ticker...");
         Dimension searchFieldDimensions = searchField.getPreferredSize();
         this.searchField.setBounds(150, 200, searchFieldDimensions.width, searchFieldDimensions.height);
-        this.searchField.setEditable(true);
         //  Adding Search Field to Trade UI
         this.tradeUI.setLayout(null);
         this.tradeUI.add(searchField);
@@ -73,7 +71,7 @@ public class YahooFinanceScraper {
         this.tradeUI.setLayout(null);
         this.tradeUI.add(chart);
         //  Window
-        window.setContentPane(startUI);
+        this.window.setContentPane(startUI);
         this.window.setVisible(true);
     }
     //----------------------------------------------------------------------------
