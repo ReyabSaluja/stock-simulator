@@ -29,8 +29,8 @@ public class YahooFinanceScraper {
 
     GraphicalUserInterface startUI, portfolioUI, tradeUI, creatorsUI, aboutUI;
 
-    GridBagLayout gbl;
-    GridBagConstraints gbc;
+    GridBagLayout gridBagLayout;
+    GridBagConstraints gridBagConstraints;
 
     private JFrame window;
     private MenuMouseListener mouseListener;
@@ -58,8 +58,23 @@ public class YahooFinanceScraper {
         this.aboutUI = new GraphicalUserInterface(0, 0, WIDTH, HEIGHT, Const.PRIMARYBLACK, aboutItems);
         //  Search Field Initialization
         this.searchField = new JTextField("Enter Ticker...");
-        Dimension searchFieldDimensions = searchField.getPreferredSize();
-        this.searchField.setBounds(150, 200, searchFieldDimensions.width, searchFieldDimensions.height);
+        //  Layout Initialization
+        this.gridBagLayout = new GridBagLayout();
+        this.gridBagConstraints = new GridBagConstraints();
+        //  Layout
+        // this.tradeUI.setLayout(gridBagLayout);
+        // gridBagConstraints.fill = GridBagConstraints.HORIZONTAL;
+
+        // gridBagConstraints.gridx = 3;
+        // gridBagConstraints.gridy = 3;
+        // this.tradeUI.add(this.searchField, gridBagConstraints);
+
+
+
+
+
+
+
         //  Adding Search Field to Trade UI
         this.tradeUI.setLayout(null);
         this.tradeUI.add(searchField);
@@ -68,8 +83,9 @@ public class YahooFinanceScraper {
         this.chart.setPreferredSize(new Dimension(600, 400));
         this.chart.setBounds(300, 300, 600, 400);
         //  Adding Chart to Trade UI
-        this.tradeUI.setLayout(null);
         this.tradeUI.add(chart);
+
+
         //  Window
         this.window.setContentPane(startUI);
         this.window.setVisible(true);
