@@ -2,6 +2,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import javax.swing.JFrame;
 import javax.swing.JTextField;
+import javax.swing.plaf.metal.MetalBorders.TextFieldBorder;
+
 import java.awt.GridBagLayout;
 import java.awt.GridBagConstraints;
 import java.awt.BorderLayout;
@@ -11,7 +13,9 @@ import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
+import java.awt.event.FocusListener;
 import java.awt.event.MouseEvent;
+import java.awt.event.FocusEvent;
 
 public class YahooFinanceScraper {
     static final int WIDTH = 1400;
@@ -57,28 +61,34 @@ public class YahooFinanceScraper {
         this.creatorsUI = new GraphicalUserInterface(0, 0, WIDTH, HEIGHT, Const.PRIMARYBLACK, creatorsItems);
         this.aboutUI = new GraphicalUserInterface(0, 0, WIDTH, HEIGHT, Const.PRIMARYBLACK, aboutItems);
         //  Search Field Initialization
-        this.searchField = new JTextField("Enter Ticker...");
+        this.searchField = new JTextField("", 30);
+        searchField.requestFocus();
+        searchField.addFocusListener(new FocusListener() {
+            @Override
+            public void focusGained(FocusEvent e) {
+                searchField.setText("Focus Gained");
+            }
+
+            @Override
+            public void focusLost(FocusEvent e) {
+                // TODO Auto-generated method stub
+                searchField.setText("Focus Lost");
+            }
+        });
+        searchField.setEditable(true);
+
         //  Layout Initialization
         this.gridBagLayout = new GridBagLayout();
         this.gridBagConstraints = new GridBagConstraints();
-        //  Layout
-        // this.tradeUI.setLayout(gridBagLayout);
-        // gridBagConstraints.fill = GridBagConstraints.HORIZONTAL;
-
-        // gridBagConstraints.gridx = 3;
-        // gridBagConstraints.gridy = 3;
-        // this.tradeUI.add(this.searchField, gridBagConstraints);
-
-
-
-
-
-
+    
         //  Adding Search Field to Trade UI
         this.tradeUI.setLayout(null);
         Dimension searchFieldDimension = this.searchField.getPreferredSize();
         this.searchField.setBounds(200, 200, searchFieldDimension.width, searchFieldDimension.height);
         this.tradeUI.add(searchField);
+
+    
+
         //  Graph Initialization
         this.chart = new LineChart(new Stock("NKE"));
         this.chart.setPreferredSize(new Dimension(600, 400));
@@ -88,6 +98,7 @@ public class YahooFinanceScraper {
 
 
         //  Window
+
         this.window.setContentPane(startUI);
         this.window.setVisible(true);
     }
@@ -275,21 +286,27 @@ public class YahooFinanceScraper {
         if (buttonFunction.equalsIgnoreCase(START)) {
             state = START;
             this.window.setContentPane(startUI);
+            startUI.requestFocus();
         } else if (buttonFunction.equalsIgnoreCase(PORTFOLIO)) {
             state = PORTFOLIO;
             this.window.setContentPane(portfolioUI);
+            portfolioUI.requestFocus();
             ((Button) portfolioItems[3]).setTextColor(Const.BLUE);
         } else if (buttonFunction.equalsIgnoreCase(TRADE)) {
             state = TRADE;
+            tradeUI.requestFocus();
             this.window.setContentPane(tradeUI);
+            searchField.requestFocusInWindow();
             ((Button) tradeItems[4]).setTextColor(Const.BLUE);
         } else if (buttonFunction.equalsIgnoreCase(CREATORS)) {
             state = CREATORS;
             this.window.setContentPane(creatorsUI);
+            creatorsUI.requestFocus();
             ((Button) creatorsItems[5]).setTextColor(Const.BLUE);
         } else if (buttonFunction.equalsIgnoreCase(ABOUT)) {
             state = ABOUT;
             this.window.setContentPane(aboutUI);
+            aboutUI.requestFocus();
             ((Button) aboutItems[6]).setTextColor(Const.BLUE);
         }
     }
