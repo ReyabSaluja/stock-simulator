@@ -1,5 +1,7 @@
 import java.awt.Color;
 import java.awt.Font;
+import java.awt.Stroke;
+import java.awt.BasicStroke;
 
 public class Const {
 
@@ -29,14 +31,27 @@ public class Const {
 
     public static final Font MENU_FONT_XL_BOLD = MENU_FONT.deriveFont(Font.BOLD, 60f);
 
+    public static final Font ARIAL_FONT = new Font("Arial", Font.PLAIN, 15);
+
     //  Colors
-    public static final Color BLUE = new Color (7, 132, 181);
     public static final Color WHITE = new Color (255, 255, 255);
     public static final Color PRIMARYBLACK = new Color(18, 18, 18);
     public static final Color SECONDARYBLACK = new Color(24, 24, 24);
+    public static final Color LIGHTBLUE = new Color (148,148,172);
+    public static final Color DARKBLUE = new Color (51,58,86,255);
+    public static final Color LIGHTGREY = new Color (161,161,161,255);
+    public static final Color DARKGREY = new Color (75,75,75,255);
     
     //  Images
     public static final String GUI_START_IMAGE = "Images/StockSimulator - User Interface Start.png";
+    public static final String SEARCH_ICON_IMAGE = "Images/SearchIcon.png";
 
-    Const() {}
+    //  Graph
+    public static final int PADDING = 25;
+    public static final int LABEL_PADDING = 25;
+
+    public static final Color LINE_COLOR = Color.BLUE;
+    public static final Color POINT_COLOR = Color.GREEN;
+    public static final Color GRID_COLOR = Color.WHITE;
+    public static final Stroke GRAPH_STROKE = new BasicStroke(2f);
 }
