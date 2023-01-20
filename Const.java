@@ -1,9 +1,22 @@
 import java.awt.Color;
 import java.awt.Font;
 
-import javax.swing.plaf.FontUIResource;
-
 public class Const {
+
+    //  Screen
+    public static final int WIDTH = 1400;
+    public static final int HEIGHT = 800;
+    public static final int DELAY = 10;
+
+    //  States
+    public static final String START = "START";
+    public static final String PORTFOLIO = "PORTFOLIO";
+    public static final String TRADE = "TRADE";
+    public static final String CREATORS = "CREATORS";
+    public static final String ABOUT = "ABOUT";
+
+    //  Other Buttons
+    public static final String SEARCH = "SEARCH";
 
     //  Fonts
     private static final Font MENU_FONT = CustomFont.loadFont("Fonts/Myriad Pro Semibold.ttf", 10);
@@ -17,7 +30,6 @@ public class Const {
     public static final Font MENU_FONT_XL_BOLD = MENU_FONT.deriveFont(Font.BOLD, 60f);
 
     //  Colors
-    public static final Color RED = Color.RED;
     public static final Color BLUE = new Color (7, 132, 181);
     public static final Color WHITE = new Color (255, 255, 255);
     public static final Color PRIMARYBLACK = new Color(18, 18, 18);
@@ -25,4 +37,6 @@ public class Const {
     
     //  Images
     public static final String GUI_START_IMAGE = "Images/StockSimulator - User Interface Start.png";
+
+    Const() {}
 }

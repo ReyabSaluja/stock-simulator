@@ -55,6 +55,10 @@ public class Button extends GraphicalUserInterfaceItem {
     public void setTextColor(Color newColor) {
         this.text.setColor(newColor);
     }
+
+    public void setText(String newText) {
+        this.text.setText(newText);
+    }
     //------------------------------------------------------------------------------  
     public void hoveredColor() {
         this.text.setColor(hoveredColor);

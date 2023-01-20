@@ -139,6 +139,12 @@ public class LineChart extends JPanel {
         this.repaint();
     }
 
+    public void setStock(Stock stock) {
+        this.scores = stock.getClosingPrices();
+        invalidate();
+        this.repaint();
+    }
+
     public List < Double > getScores() {
         return scores;
     }

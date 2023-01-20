@@ -2,11 +2,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import javax.swing.JFrame;
 import javax.swing.JTextField;
-import javax.swing.plaf.metal.MetalBorders.TextFieldBorder;
-
-import java.awt.GridBagLayout;
-import java.awt.GridBagConstraints;
-import java.awt.BorderLayout;
 
 import java.awt.Color;
 import java.awt.Dimension;
@@ -17,95 +12,66 @@ import java.awt.event.FocusListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.FocusEvent;
 
-public class YahooFinanceScraper {
-    static final int WIDTH = 1400;
-    static final int HEIGHT = 800;
-    static final int DELAY = 10;
+public class StockMarketSimulator {
 
-    static final String START = "START";
-    static final String PORTFOLIO = "PORTFOLIO";
-    static final String TRADE = "TRADE";
-    static final String CREATORS = "CREATORS";
-    static final String ABOUT = "ABOUT";
+    private JTextField searchField;
+    private String search;
 
-    JTextField searchField;
-    LineChart chart;
+    private LineChart chart;
 
-    GraphicalUserInterface startUI, portfolioUI, tradeUI, creatorsUI, aboutUI;
-
-    GridBagLayout gridBagLayout;
-    GridBagConstraints gridBagConstraints;
-
+    private GraphicalUserInterface startUI, portfolioUI, tradeUI, creatorsUI, aboutUI;
     private JFrame window;
     private MenuMouseListener mouseListener;
     private MenuMotionListener mouseMotionListener;
 
-    private String state = START;
+    private String state = Const.START;
     //----------------------------------------------------------------------------
-    public YahooFinanceScraper() {
+    public StockMarketSimulator() {
         //  Window Initialization
-        this.window = new JFrame("Stock Simulator");
-        this.window.setSize(WIDTH, HEIGHT);
-        this.window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        this.window.setResizable(false);
-        this.window.setLocationRelativeTo(null);
+        window = new JFrame("Stock Simulator");
+        window.setSize(Const.WIDTH, Const.HEIGHT);
+        window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        window.setResizable(false);
+        window.setLocationRelativeTo(null);
         //  Mouse and Mouse Motion Initialization
         mouseListener = new MenuMouseListener();
         mouseMotionListener = new MenuMotionListener();
-        this.window.addMouseListener(mouseListener);
-        this.window.addMouseMotionListener(mouseMotionListener);
+        window.addMouseListener(mouseListener);
+        window.addMouseMotionListener(mouseMotionListener);
         //  Panels Initialization
-        this.startUI = new GraphicalUserInterface(0, 0, WIDTH, HEIGHT, Const.PRIMARYBLACK, startItems);
-        this.portfolioUI = new GraphicalUserInterface(0, 0, WIDTH, HEIGHT, Const.PRIMARYBLACK, portfolioItems);
-        this.tradeUI = new GraphicalUserInterface(0, 0, WIDTH, HEIGHT, Const.PRIMARYBLACK, tradeItems);
-        this.creatorsUI = new GraphicalUserInterface(0, 0, WIDTH, HEIGHT, Const.PRIMARYBLACK, creatorsItems);
-        this.aboutUI = new GraphicalUserInterface(0, 0, WIDTH, HEIGHT, Const.PRIMARYBLACK, aboutItems);
+        startUI = new GraphicalUserInterface(0, 0, Const.WIDTH, Const.HEIGHT, Const.PRIMARYBLACK, startItems);
+        portfolioUI = new GraphicalUserInterface(0, 0, Const.WIDTH, Const.HEIGHT, Const.PRIMARYBLACK, portfolioItems);
+        tradeUI = new GraphicalUserInterface(0, 0, Const.WIDTH, Const.HEIGHT, Const.PRIMARYBLACK, tradeItems);
+        creatorsUI = new GraphicalUserInterface(0, 0, Const.WIDTH, Const.HEIGHT, Const.PRIMARYBLACK, creatorsItems);
+        aboutUI = new GraphicalUserInterface(0, 0, Const.WIDTH, Const.HEIGHT, Const.PRIMARYBLACK, aboutItems);
         //  Search Field Initialization
-        this.searchField = new JTextField("", 30);
-        searchField.requestFocus();
+        searchField = new JTextField("", 15);
         searchField.addFocusListener(new FocusListener() {
             @Override
             public void focusGained(FocusEvent e) {
-                searchField.setText("Focus Gained");
+                searchField.setText("Look up Company Symbol");
             }
 
             @Override
             public void focusLost(FocusEvent e) {
-                // TODO Auto-generated method stub
                 searchField.setText("Focus Lost");
             }
         });
-        searchField.setEditable(true);
-
-        //  Layout Initialization
-        this.gridBagLayout = new GridBagLayout();
-        this.gridBagConstraints = new GridBagConstraints();
-    
         //  Adding Search Field to Trade UI
-        this.tradeUI.setLayout(null);
-        Dimension searchFieldDimension = this.searchField.getPreferredSize();
-        this.searchField.setBounds(200, 200, searchFieldDimension.width, searchFieldDimension.height);
-        this.tradeUI.add(searchField);
-
-    
-
-        //  Graph Initialization
-        this.chart = new LineChart(new Stock("NKE"));
-        this.chart.setPreferredSize(new Dimension(600, 400));
-        this.chart.setBounds(300, 300, 600, 400);
-        //  Adding Chart to Trade UI
-        this.tradeUI.add(chart);
-
-
+        tradeUI.setLayout(null);
+        searchField.setFont(Const.MENU_FONT_S);
+        Dimension searchFieldDimension = searchField.getPreferredSize();
+        searchField.setBounds(200, 200, searchFieldDimension.width, searchFieldDimension.height);
+        tradeUI.add(searchField);
         //  Window
-
-        this.window.setContentPane(startUI);
-        this.window.setVisible(true);
+        window.setContentPane(startUI);
+        window.setVisible(true);
     }
     //----------------------------------------------------------------------------
     public void run() {
         //	Main Game Loop
         while (true) {
+            // System.out.println(searchField.getText());
             try {
                 window.repaint();
                 Thread.sleep(15);
@@ -167,7 +133,7 @@ public class YahooFinanceScraper {
      *   @param mouseY
      */
     public void hoverButtons(int mouseX, int mouseY) {
-        if (state.equalsIgnoreCase(START)) {
+        if (state.equalsIgnoreCase(Const.START)) {
             startUI.resetButtons();
 
             ArrayList < Integer > hoveredButtons = startUI.findCollidedButtons(mouseX, mouseY);
@@ -177,7 +143,7 @@ public class YahooFinanceScraper {
 
                 hoveredButton.hoveredColor();
             }
-        } else if (state.equalsIgnoreCase(PORTFOLIO)) {
+        } else if (state.equalsIgnoreCase(Const.PORTFOLIO)) {
             portfolioUI.resetButtonsExcept(3);
 
             ArrayList < Integer > hoveredButtons = portfolioUI.findCollidedButtons(mouseX, mouseY);
@@ -187,7 +153,7 @@ public class YahooFinanceScraper {
 
                 hoveredButton.hoveredColor();
             }
-        } else if (state.equalsIgnoreCase(TRADE)) {
+        } else if (state.equalsIgnoreCase(Const.TRADE)) {
             tradeUI.resetButtonsExcept(4);
 
             ArrayList < Integer > hoveredButtons = tradeUI.findCollidedButtons(mouseX, mouseY);
@@ -197,7 +163,7 @@ public class YahooFinanceScraper {
 
                 hoveredButton.hoveredColor();
             }
-        } else if (state.equalsIgnoreCase(CREATORS)) {
+        } else if (state.equalsIgnoreCase(Const.CREATORS)) {
             creatorsUI.resetButtonsExcept(5);
 
             ArrayList < Integer > hoveredButtons = creatorsUI.findCollidedButtons(mouseX, mouseY);
@@ -207,7 +173,7 @@ public class YahooFinanceScraper {
 
                 hoveredButton.hoveredColor();
             }
-        } else if (state.equalsIgnoreCase(ABOUT)) {
+        } else if (state.equalsIgnoreCase(Const.ABOUT)) {
             aboutUI.resetButtonsExcept(6);
 
             ArrayList < Integer > hoveredButtons = aboutUI.findCollidedButtons(mouseX, mouseY);
@@ -229,7 +195,7 @@ public class YahooFinanceScraper {
      *  @param mouseEvent
      */
     public void callRanButtons(int mouseX, int mouseY, int mouseEvent) {
-        if (state.equalsIgnoreCase(START)) {
+        if (state.equalsIgnoreCase(Const.START)) {
             ArrayList < Integer > ranButtons = startUI.findCollidedButtons(mouseX, mouseY);
 
             for (int ranButtonIndex: ranButtons) {
@@ -238,7 +204,7 @@ public class YahooFinanceScraper {
                     runButtonFunction(ranButton.getButtonFunction());
                 }
             }
-        } else if (state.equalsIgnoreCase(PORTFOLIO)) {
+        } else if (state.equalsIgnoreCase(Const.PORTFOLIO)) {
             ArrayList < Integer > ranButtons = portfolioUI.findCollidedButtons(mouseX, mouseY);
 
             for (int ranButtonIndex: ranButtons) {
@@ -247,7 +213,7 @@ public class YahooFinanceScraper {
                     runButtonFunction(ranButton.getButtonFunction());
                 }
             }
-        } else if (state.equalsIgnoreCase(TRADE)) {
+        } else if (state.equalsIgnoreCase(Const.TRADE)) {
             ArrayList < Integer > ranButtons = tradeUI.findCollidedButtons(mouseX, mouseY);
 
             for (int ranButtonIndex: ranButtons) {
@@ -256,7 +222,7 @@ public class YahooFinanceScraper {
                     runButtonFunction(ranButton.getButtonFunction());
                 }
             }
-        } else if (state.equalsIgnoreCase(CREATORS)) {
+        } else if (state.equalsIgnoreCase(Const.CREATORS)) {
             ArrayList < Integer > ranButtons = creatorsUI.findCollidedButtons(mouseX, mouseY);
 
             for (int ranButtonIndex: ranButtons) {
@@ -265,7 +231,7 @@ public class YahooFinanceScraper {
                     runButtonFunction(ranButton.getButtonFunction());
                 }
             }
-        } else if (state.equalsIgnoreCase(ABOUT)) {
+        } else if (state.equalsIgnoreCase(Const.ABOUT)) {
             ArrayList < Integer > ranButtons = aboutUI.findCollidedButtons(mouseX, mouseY);
 
             for (int ranButtonIndex: ranButtons) {
@@ -283,31 +249,44 @@ public class YahooFinanceScraper {
      *  @param buttonFunction
      */
     public void runButtonFunction(String buttonFunction) {
-        if (buttonFunction.equalsIgnoreCase(START)) {
-            state = START;
-            this.window.setContentPane(startUI);
+        if (buttonFunction.equalsIgnoreCase(Const.START)) {
+            state = Const.START;
+            window.setContentPane(startUI);
             startUI.requestFocus();
-        } else if (buttonFunction.equalsIgnoreCase(PORTFOLIO)) {
-            state = PORTFOLIO;
-            this.window.setContentPane(portfolioUI);
+        } else if (buttonFunction.equalsIgnoreCase(Const.PORTFOLIO)) {
+            state = Const.PORTFOLIO;
+            window.setContentPane(portfolioUI);
             portfolioUI.requestFocus();
             ((Button) portfolioItems[3]).setTextColor(Const.BLUE);
-        } else if (buttonFunction.equalsIgnoreCase(TRADE)) {
-            state = TRADE;
+        } else if (buttonFunction.equalsIgnoreCase(Const.TRADE)) {
+            state = Const.TRADE;
             tradeUI.requestFocus();
-            this.window.setContentPane(tradeUI);
+            window.setContentPane(tradeUI);
             searchField.requestFocusInWindow();
             ((Button) tradeItems[4]).setTextColor(Const.BLUE);
-        } else if (buttonFunction.equalsIgnoreCase(CREATORS)) {
-            state = CREATORS;
-            this.window.setContentPane(creatorsUI);
+        } else if (buttonFunction.equalsIgnoreCase(Const.CREATORS)) {
+            state = Const.CREATORS;
+            window.setContentPane(creatorsUI);
             creatorsUI.requestFocus();
             ((Button) creatorsItems[5]).setTextColor(Const.BLUE);
-        } else if (buttonFunction.equalsIgnoreCase(ABOUT)) {
-            state = ABOUT;
-            this.window.setContentPane(aboutUI);
+        } else if (buttonFunction.equalsIgnoreCase(Const.ABOUT)) {
+            state = Const.ABOUT;
+            window.setContentPane(aboutUI);
             aboutUI.requestFocus();
             ((Button) aboutItems[6]).setTextColor(Const.BLUE);
+        } else if (buttonFunction.equalsIgnoreCase(Const.SEARCH)) {
+            search = searchField.getText().toUpperCase();
+            System.out.println(search);
+            //  Graph Initialization
+            if (chart == null) {
+                chart = new LineChart(new Stock(search));
+            } else {
+                chart.setStock(new Stock(search));
+            }
+            chart.setPreferredSize(new Dimension(600, 400));
+            chart.setBounds(300, 300, 600, 400);
+            //  Adding Chart to Trade UI
+            tradeUI.add(chart);
         }
     }
     //----------------------------------------------------------------------------
@@ -316,56 +295,55 @@ public class YahooFinanceScraper {
         new Image(0, 0, Const.GUI_START_IMAGE),
         new Text(50, 15, "Stock", Const.MENU_FONT_XL, Const.WHITE, true),
         new Text(195, 15, "Scraper", Const.MENU_FONT_XL_BOLD, Const.BLUE, true),
-        new Button(new Rect(50, 100, Const.SECONDARYBLACK, 100, 50), new Text(50, 100, PORTFOLIO, Const.MENU_FONT_S, Const.WHITE, true), MouseEvent.MOUSE_CLICKED, PORTFOLIO, Const.BLUE, true, true),
-        new Button(new Rect(250, 100, Const.SECONDARYBLACK, 100, 50), new Text(250, 100, TRADE, Const.MENU_FONT_S, Const.WHITE, true), MouseEvent.MOUSE_CLICKED, TRADE, Const.BLUE, true, true),
-        new Button(new Rect(400, 100, Const.SECONDARYBLACK, 100, 50), new Text(400, 100, CREATORS, Const.MENU_FONT_S, Const.WHITE, true), MouseEvent.MOUSE_CLICKED, CREATORS, Const.BLUE, true, true),
-        new Button(new Rect(600, 100, Const.SECONDARYBLACK, 100, 50), new Text(600, 100, ABOUT, Const.MENU_FONT_S, Const.WHITE, true), MouseEvent.MOUSE_CLICKED, ABOUT, Const.BLUE, true, true)
+        new Button(new Rect(50, 100, Const.SECONDARYBLACK, 100, 50), new Text(50, 100, Const.PORTFOLIO, Const.MENU_FONT_S, Const.WHITE, true), MouseEvent.MOUSE_CLICKED, Const.PORTFOLIO, Const.BLUE, true, true),
+        new Button(new Rect(250, 100, Const.SECONDARYBLACK, 100, 50), new Text(250, 100, Const.TRADE, Const.MENU_FONT_S, Const.WHITE, true), MouseEvent.MOUSE_CLICKED, Const.TRADE, Const.BLUE, true, true),
+        new Button(new Rect(400, 100, Const.SECONDARYBLACK, 100, 50), new Text(400, 100, Const.CREATORS, Const.MENU_FONT_S, Const.WHITE, true), MouseEvent.MOUSE_CLICKED, Const.CREATORS, Const.BLUE, true, true),
+        new Button(new Rect(600, 100, Const.SECONDARYBLACK, 100, 50), new Text(600, 100, Const.ABOUT, Const.MENU_FONT_S, Const.WHITE, true), MouseEvent.MOUSE_CLICKED, Const.ABOUT, Const.BLUE, true, true)
     };
 
     GraphicalUserInterfaceItem[] portfolioItems = {
         new Image(0, 0, Const.GUI_START_IMAGE),
         new Text(50, 15, "Stock", Const.MENU_FONT_XL, Const.WHITE, true),
         new Text(195, 15, "Scraper", Const.MENU_FONT_XL_BOLD, Const.BLUE, true),
-        new Button(new Rect(50, 100, Const.SECONDARYBLACK, 100, 50), new Text(50, 100, PORTFOLIO, Const.MENU_FONT_S, Const.WHITE, true), MouseEvent.MOUSE_CLICKED, PORTFOLIO, Const.BLUE, true, true),
-        new Button(new Rect(250, 100, Const.SECONDARYBLACK, 100, 50), new Text(250, 100, TRADE, Const.MENU_FONT_S, Const.WHITE, true), MouseEvent.MOUSE_CLICKED, TRADE, Const.BLUE, true, true),
-        new Button(new Rect(400, 100, Const.SECONDARYBLACK, 100, 50), new Text(400, 100, CREATORS, Const.MENU_FONT_S, Const.WHITE, true), MouseEvent.MOUSE_CLICKED, CREATORS, Const.BLUE, true, true),
-        new Button(new Rect(600, 100, Const.SECONDARYBLACK, 100, 50), new Text(600, 100, ABOUT, Const.MENU_FONT_S, Const.WHITE, true), MouseEvent.MOUSE_CLICKED, ABOUT, Const.BLUE, true, true)
+        new Button(new Rect(50, 100, Const.SECONDARYBLACK, 100, 50), new Text(50, 100, Const.PORTFOLIO, Const.MENU_FONT_S, Const.WHITE, true), MouseEvent.MOUSE_CLICKED, Const.PORTFOLIO, Const.BLUE, true, true),
+        new Button(new Rect(250, 100, Const.SECONDARYBLACK, 100, 50), new Text(250, 100, Const.TRADE, Const.MENU_FONT_S, Const.WHITE, true), MouseEvent.MOUSE_CLICKED, Const.TRADE, Const.BLUE, true, true),
+        new Button(new Rect(400, 100, Const.SECONDARYBLACK, 100, 50), new Text(400, 100, Const.CREATORS, Const.MENU_FONT_S, Const.WHITE, true), MouseEvent.MOUSE_CLICKED, Const.CREATORS, Const.BLUE, true, true),
+        new Button(new Rect(600, 100, Const.SECONDARYBLACK, 100, 50), new Text(600, 100, Const.ABOUT, Const.MENU_FONT_S, Const.WHITE, true), MouseEvent.MOUSE_CLICKED, Const.ABOUT, Const.BLUE, true, true)
     };
 
     GraphicalUserInterfaceItem[] tradeItems = {
         new Image(0, 0, Const.GUI_START_IMAGE),
         new Text(50, 15, "Stock", Const.MENU_FONT_XL, Const.WHITE, true),
         new Text(195, 15, "Scraper", Const.MENU_FONT_XL_BOLD, Const.BLUE, true),
-        new Button(new Rect(50, 100, Const.SECONDARYBLACK, 100, 50), new Text(50, 100, PORTFOLIO, Const.MENU_FONT_S, Const.WHITE, true), MouseEvent.MOUSE_CLICKED, "PORTFOLIO", Const.BLUE, true, true),
-        new Button(new Rect(250, 100, Const.SECONDARYBLACK, 100, 50), new Text(250, 100, TRADE, Const.MENU_FONT_S, Const.WHITE, true), MouseEvent.MOUSE_CLICKED, "TRADE", Const.BLUE, true, true),
-        new Button(new Rect(400, 100, Const.SECONDARYBLACK, 100, 50), new Text(400, 100, CREATORS, Const.MENU_FONT_S, Const.WHITE, true), MouseEvent.MOUSE_CLICKED, "CREATORS", Const.BLUE, true, true),
-        new Button(new Rect(600, 100, Const.SECONDARYBLACK, 100, 50), new Text(600, 100, ABOUT, Const.MENU_FONT_S, Const.WHITE, true), MouseEvent.MOUSE_CLICKED, "ABOUT", Const.BLUE, true, true),
+        new Button(new Rect(50, 100, Const.SECONDARYBLACK, 100, 50), new Text(50, 100, Const.PORTFOLIO, Const.MENU_FONT_S, Const.WHITE, true), MouseEvent.MOUSE_CLICKED, Const.PORTFOLIO, Const.BLUE, true, true),
+        new Button(new Rect(250, 100, Const.SECONDARYBLACK, 100, 50), new Text(250, 100, Const.TRADE, Const.MENU_FONT_S, Const.WHITE, true), MouseEvent.MOUSE_CLICKED, Const.TRADE, Const.BLUE, true, true),
+        new Button(new Rect(400, 100, Const.SECONDARYBLACK, 100, 50), new Text(400, 100, Const.CREATORS, Const.MENU_FONT_S, Const.WHITE, true), MouseEvent.MOUSE_CLICKED, Const.CREATORS, Const.BLUE, true, true),
+        new Button(new Rect(600, 100, Const.SECONDARYBLACK, 100, 50), new Text(600, 100, Const.ABOUT, Const.MENU_FONT_S, Const.WHITE, true), MouseEvent.MOUSE_CLICKED, Const.ABOUT, Const.BLUE, true, true),
+        new Button(new Rect(650, 200, Const.SECONDARYBLACK, 100, 50), new Text(600, 100, Const.SEARCH, Const.MENU_FONT_S, Const.WHITE, true), MouseEvent.MOUSE_CLICKED, Const.SEARCH, Const.BLUE, true, true),
     };
 
     GraphicalUserInterfaceItem[] creatorsItems = {
         new Image(0, 0, Const.GUI_START_IMAGE),
         new Text(50, 15, "Stock", Const.MENU_FONT_XL, Const.WHITE, true),
         new Text(195, 15, "Scraper", Const.MENU_FONT_XL_BOLD, Const.BLUE, true),
-        new Button(new Rect(50, 100, Const.SECONDARYBLACK, 100, 50), new Text(50, 100, PORTFOLIO, Const.MENU_FONT_S, Const.WHITE, true), MouseEvent.MOUSE_CLICKED, PORTFOLIO, Const.BLUE, true, true),
-        new Button(new Rect(250, 100, Const.SECONDARYBLACK, 100, 50), new Text(250, 100, TRADE, Const.MENU_FONT_S, Const.WHITE, true), MouseEvent.MOUSE_CLICKED, TRADE, Const.BLUE, true, true),
-        new Button(new Rect(400, 100, Const.SECONDARYBLACK, 100, 50), new Text(400, 100, CREATORS, Const.MENU_FONT_S, Const.WHITE, true), MouseEvent.MOUSE_CLICKED, CREATORS, Const.BLUE, true, true),
-        new Button(new Rect(600, 100, Const.SECONDARYBLACK, 100, 50), new Text(600, 100, ABOUT, Const.MENU_FONT_S, Const.WHITE, true), MouseEvent.MOUSE_CLICKED, ABOUT, Const.BLUE, true, true)
+        new Button(new Rect(50, 100, Const.SECONDARYBLACK, 100, 50), new Text(50, 100, Const.PORTFOLIO, Const.MENU_FONT_S, Const.WHITE, true), MouseEvent.MOUSE_CLICKED, Const.PORTFOLIO, Const.BLUE, true, true),
+        new Button(new Rect(250, 100, Const.SECONDARYBLACK, 100, 50), new Text(250, 100, Const.TRADE, Const.MENU_FONT_S, Const.WHITE, true), MouseEvent.MOUSE_CLICKED, Const.TRADE, Const.BLUE, true, true),
+        new Button(new Rect(400, 100, Const.SECONDARYBLACK, 100, 50), new Text(400, 100, Const.CREATORS, Const.MENU_FONT_S, Const.WHITE, true), MouseEvent.MOUSE_CLICKED, Const.CREATORS, Const.BLUE, true, true),
+        new Button(new Rect(600, 100, Const.SECONDARYBLACK, 100, 50), new Text(600, 100, Const.ABOUT, Const.MENU_FONT_S, Const.WHITE, true), MouseEvent.MOUSE_CLICKED, Const.ABOUT, Const.BLUE, true, true)
     };
 
     GraphicalUserInterfaceItem[] aboutItems = {
         new Image(0, 0, Const.GUI_START_IMAGE),
         new Text(50, 15, "Stock", Const.MENU_FONT_XL, Const.WHITE, true),
         new Text(195, 15, "Scraper", Const.MENU_FONT_XL_BOLD, Const.BLUE, true),
-        new Button(new Rect(50, 100, Const.SECONDARYBLACK, 100, 50), new Text(50, 100, PORTFOLIO, Const.MENU_FONT_S, Const.WHITE, true), MouseEvent.MOUSE_CLICKED, PORTFOLIO, Const.BLUE, true, true),
-        new Button(new Rect(250, 100, Const.SECONDARYBLACK, 100, 50), new Text(250, 100, TRADE, Const.MENU_FONT_S, Const.WHITE, true), MouseEvent.MOUSE_CLICKED, TRADE, Const.BLUE, true, true),
-        new Button(new Rect(400, 100, Const.SECONDARYBLACK, 100, 50), new Text(400, 100, CREATORS, Const.MENU_FONT_S, Const.WHITE, true), MouseEvent.MOUSE_CLICKED, CREATORS, Const.BLUE, true, true),
-        new Button(new Rect(600, 100, Const.SECONDARYBLACK, 100, 50), new Text(600, 100, ABOUT, Const.MENU_FONT_S, Const.WHITE, true), MouseEvent.MOUSE_CLICKED, ABOUT, Const.BLUE, true, true)
+        new Button(new Rect(50, 100, Const.SECONDARYBLACK, 100, 50), new Text(50, 100, Const.PORTFOLIO, Const.MENU_FONT_S, Const.WHITE, true), MouseEvent.MOUSE_CLICKED, Const.PORTFOLIO, Const.BLUE, true, true),
+        new Button(new Rect(250, 100, Const.SECONDARYBLACK, 100, 50), new Text(250, 100, Const.TRADE, Const.MENU_FONT_S, Const.WHITE, true), MouseEvent.MOUSE_CLICKED, Const.TRADE, Const.BLUE, true, true),
+        new Button(new Rect(400, 100, Const.SECONDARYBLACK, 100, 50), new Text(400, 100, Const.CREATORS, Const.MENU_FONT_S, Const.WHITE, true), MouseEvent.MOUSE_CLICKED, Const.CREATORS, Const.BLUE, true, true),
+        new Button(new Rect(600, 100, Const.SECONDARYBLACK, 100, 50), new Text(600, 100, Const.ABOUT, Const.MENU_FONT_S, Const.WHITE, true), MouseEvent.MOUSE_CLICKED, Const.ABOUT, Const.BLUE, true, true)
     };
     //----------------------------------------------------------------------------
     public static void main(String[] args) throws IOException {
-
-        YahooFinanceScraper test = new YahooFinanceScraper();
-        test.run();
-
+        StockMarketSimulator simulator = new StockMarketSimulator();
+        simulator.run();
     }
 }
