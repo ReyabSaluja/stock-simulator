@@ -50,8 +50,8 @@ public class Const {
     public static final int PADDING = 25;
     public static final int LABEL_PADDING = 25;
 
-    public static final Color LINE_COLOR = Color.BLUE;
-    public static final Color POINT_COLOR = Color.GREEN;
+    public static final Color LINE_COLOR = LIGHTBLUE;
+    public static final Color POINT_COLOR = DARKBLUE;
     public static final Color GRID_COLOR = Color.WHITE;
     public static final Stroke GRAPH_STROKE = new BasicStroke(2f);
 }
