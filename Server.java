@@ -9,78 +9,77 @@ import java.io.InputStreamReader;
 import java.io.IOException;
 
 public class Server {
-	
-    private final int PORT = 5000;       
+
+    private final int PORT = 5000;
     private ServerSocket serverSocket;
     private Socket clientSocket;
     private PrintWriter output;
     private BufferedReader input;
     private int clientCounter = 0;
-    private ArrayList<User> userList;
-    
-    public Server(ArrayList<User> userList) {
-    	this.userList = userList;
+    private ArrayList < User > userList;
+
+    public Server(ArrayList < User > userList) {
+        this.userList = userList;
     }
-    
-    public static void main(String[] args) throws Exception { 
-    	
-    	//Taking input for login
-    	ArrayList<User> userList = new ArrayList<User>();
-    	File userDatabase = new File("Server Database/USER_DATABASE.txt");
-    	Scanner readUsers = new Scanner(userDatabase);
-    	while (readUsers.hasNext()) {
-    		String lineAt = readUsers.next();
-    		String[] loginComponents = lineAt.split("/");
-    		userList.add(new User(loginComponents[0], loginComponents[1]));
-    	}
-    
+
+    public static void main(String[] args) throws Exception {
+
+        //Taking input for login
+        ArrayList < User > userList = new ArrayList < User > ();
+        File userDatabase = new File("Server Database/USER_DATABASE.txt");
+        Scanner readUsers = new Scanner(userDatabase);
+        while (readUsers.hasNext()) {
+            String lineAt = readUsers.next();
+            String[] loginComponents = lineAt.split("/");
+            userList.add(new User(loginComponents[0], loginComponents[1]));
+        }
+
         Server server = new Server(userList);
         server.go();
     }
-    
-    public void go() throws Exception{ 
+
+    public void go() throws Exception {
         //create a socket with the local IP address and wait for connection request       
         System.out.println("Waiting for a connection request from a client ...");
-        serverSocket = new ServerSocket(PORT);                //create and bind a socket
-        while(true) {
-            clientSocket = serverSocket.accept();             //wait for connection request
-            clientCounter = clientCounter +1;
-            System.out.println("Client "+clientCounter+" connected");
+        serverSocket = new ServerSocket(PORT); //create and bind a socket
+        while (true) {
+            clientSocket = serverSocket.accept(); //wait for connection request
+            clientCounter = clientCounter + 1;
+            System.out.println("Client " + clientCounter + " connected");
             Thread connectionThread = new Thread(new ConnectionHandler(clientSocket));
-            connectionThread.start();                         //start a new thread to handle the connection
+            connectionThread.start(); //start a new thread to handle the connection
         }
     }
-    
-//------------------------------------------------------------------------------
-    class ConnectionHandler extends Thread { 
+
+    //------------------------------------------------------------------------------
+    class ConnectionHandler extends Thread {
         private Socket socket;
         private PrintWriter output;
         private BufferedReader input;
-        private String login; 
-        
-        
+        private String login;
+
         //Print to file method, returns current state
         //TODO: IMPLEMENT
-        
-        public ConnectionHandler(Socket socket) { 
-            this.socket = socket;            
+
+        public ConnectionHandler(Socket socket) {
+            this.socket = socket;
             System.out.println(userList);
         }
-        
+
         public boolean authenticateUser(User currentUser) {
-        	//Loops through entire user database to check if login is the same
-        	for (int userIndex = 0; userIndex < userList.size(); userIndex++) {
-        		if (userList.get(userIndex).compare(currentUser)) {
-        			return true;
-        		}
-        	}
-        	return false;
+            //Loops through entire user database to check if login is the same
+            for (int userIndex = 0; userIndex < userList.size(); userIndex++) {
+                if (userList.get(userIndex).compare(currentUser)) {
+                    return true;
+                }
+            }
+            return false;
         }
-        
+
         public void addUser(User currentUser) {
-        	userList.add(currentUser);
+            userList.add(currentUser);
         }
-        
+
         public void run() {
             try {
                 input = new BufferedReader(new InputStreamReader(socket.getInputStream()));
@@ -88,15 +87,15 @@ public class Server {
                 //LOGIN HANDLER
                 login = input.readLine();
                 System.out.println(login);
-        		String[] loginComponents = login.split("/");
+                String[] loginComponents = login.split("/");
                 User loginUser = new User(loginComponents[0], loginComponents[1]);
                 if (authenticateUser(loginUser)) {
-                	output.println("Authenticated!");
-                	output.flush();
+                    output.println("Authenticated!");
+                    output.flush();
                 } else {
-                	addUser(loginUser);
-                	output.println("Authenticated!");
-                	output.flush();
+                    addUser(loginUser);
+                    output.println("Authenticated!");
+                    output.flush();
                 }
                 //LISTEN TO TRADES
                 //If Client has disconnected
@@ -105,7 +104,9 @@ public class Server {
                     output.close();
                     System.out.println("DISCONNECTED!");
                 }
-            } catch (IOException e) {e.printStackTrace();}
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
-    }    
+    }
 }

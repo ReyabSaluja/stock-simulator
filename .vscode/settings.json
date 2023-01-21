@@ -2,6 +2,7 @@
     "java.project.referencedLibraries": [
         "lib/**/*.jar",
         "/Users/Reyab/Desktop/jsoup-1.15.3.jar",
-        "/Users/Reyab/Documents/jsoup-1.15.3.jar"
+        "/Users/Reyab/Documents/jsoup-1.15.3.jar",
+        "c:\\Users\\reyab\\OneDrive\\Desktop\\jsoup-1.15.3 (1).jar"
     ]
 }
