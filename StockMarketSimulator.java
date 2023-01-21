@@ -35,7 +35,7 @@ public class StockMarketSimulator {
     private PrintWriter output;
     private BufferedReader input;
     private ConnectionTerminator connectionTerminator;
-    private boolean authenticated; 
+    private boolean authenticated;
 
     //----------------------------------------------------------------------------
     public StockMarketSimulator() {
@@ -70,8 +70,7 @@ public class StockMarketSimulator {
             }
 
             @Override
-            public void focusLost(FocusEvent e) {
-            }
+            public void focusLost(FocusEvent e) {}
         });
         //  Adding Search Field to Trade UI
         tradeUI.setLayout(null);
@@ -89,8 +88,7 @@ public class StockMarketSimulator {
             }
 
             @Override
-            public void focusLost(FocusEvent e) {
-            }
+            public void focusLost(FocusEvent e) {}
         });
         passwordField = new JTextField("", 15);
         passwordField.addFocusListener(new FocusListener() {
@@ -100,25 +98,22 @@ public class StockMarketSimulator {
             }
 
             @Override
-            public void focusLost(FocusEvent e) {
-            }
+            public void focusLost(FocusEvent e) {}
         });
         startUI.setLayout(null);
-        loginField.setBounds(Const.WIDTH/2 - 250, 350, 500, 70);
+        loginField.setBounds(Const.WIDTH / 2 - 250, 350, 500, 70);
         loginField.setForeground(Const.LIGHTGREY);
         loginField.setBorder(new LineBorder(Const.LIGHTBLUE, 3, true));
         startUI.add(loginField);
 
-        passwordField.setBounds(Const.WIDTH/2 - 250, 450, 500, 70);
+        passwordField.setBounds(Const.WIDTH / 2 - 250, 450, 500, 70);
         passwordField.setForeground(Const.LIGHTGREY);
         passwordField.setBorder(new LineBorder(Const.LIGHTBLUE, 3, true));
         startUI.add(passwordField);
 
         connectionTerminator = new ConnectionTerminator();
         window.addWindowListener(connectionTerminator);
-       
 
-        
         //  Window
         window.setContentPane(startUI);
         window.setVisible(true);
@@ -425,7 +420,7 @@ public class StockMarketSimulator {
         new Button(new Rect(400, 100, Const.DARKBLUE, 100, 50), new Text(400, 100, Const.CREATORS, Const.MENU_FONT_S, Const.WHITE, true), MouseEvent.MOUSE_CLICKED, Const.CREATORS, Const.LIGHTBLUE, true, true),
         new Button(new Rect(600, 100, Const.DARKBLUE, 100, 50), new Text(600, 100, Const.ABOUT, Const.MENU_FONT_S, Const.WHITE, true), MouseEvent.MOUSE_CLICKED, Const.ABOUT, Const.LIGHTBLUE, true, true),
         //login button BELOW the text fields
-        new Button(new Rect(650, 550, Const.DARKBLUE, 100, 100), new Text(50, 200, Const.LOGIN, Const.MENU_FONT_S, Const.WHITE, true), MouseEvent.MOUSE_CLICKED, Const.LOGIN, Const.LIGHTBLUE, true, true),
+        new Button(new Rect(650, 550, Const.WHITE, 100, 100), new Text(50, 200, Const.LOGIN, Const.MENU_FONT_S, Const.PRIMARYBLACK, true), MouseEvent.MOUSE_CLICKED, Const.LOGIN, Const.LIGHTBLUE, true, true),
 
     };
 
@@ -479,9 +474,5 @@ public class StockMarketSimulator {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
-
-
-
     }
 }
