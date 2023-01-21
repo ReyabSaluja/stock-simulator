@@ -18,7 +18,7 @@ import java.awt.event.WindowEvent;
 
 public class StockMarketSimulator {
 
-    private JTextField loginField;
+    private JTextField usernameField;
     private JTextField passwordField;
     private String userInformation;
     private JTextField searchField;
@@ -81,11 +81,11 @@ public class StockMarketSimulator {
         tradeUI.add(searchField);
 
         userInformation = "";
-        loginField = new JTextField("", 15);
-        loginField.addFocusListener(new FocusListener() {
+        usernameField = new JTextField("", 15);
+        usernameField.addFocusListener(new FocusListener() {
             @Override
             public void focusGained(FocusEvent e) {
-                loginField.setText("   Login");
+                usernameField.setText("   Username");
             }
 
             @Override
@@ -104,10 +104,10 @@ public class StockMarketSimulator {
             }
         });
         startUI.setLayout(null);
-        loginField.setBounds(Const.WIDTH/2 - 250, 350, 500, 70);
-        loginField.setForeground(Const.LIGHTGREY);
-        loginField.setBorder(new LineBorder(Const.LIGHTBLUE, 3, true));
-        startUI.add(loginField);
+        usernameField.setBounds(Const.WIDTH/2 - 250, 350, 500, 70);
+        usernameField.setForeground(Const.LIGHTGREY);
+        usernameField.setBorder(new LineBorder(Const.LIGHTBLUE, 3, true));
+        startUI.add(usernameField);
 
         passwordField.setBounds(Const.WIDTH/2 - 250, 450, 500, 70);
         passwordField.setForeground(Const.LIGHTGREY);
@@ -399,9 +399,9 @@ public class StockMarketSimulator {
             tradeUI.add(chart);
         } else if (buttonFunction.equalsIgnoreCase(Const.LOGIN)) {
             String loginStatus = "";
-            String userName = loginField.getText();
+            String username = usernameField.getText();
             String password = passwordField.getText();
-            String userInformation = userName + "/" + password;
+            String userInformation = username + "/" + password;
             output.println(userInformation);
             output.flush();
             try {
@@ -426,7 +426,7 @@ public class StockMarketSimulator {
         new Button(new Rect(400, 100, Const.DARKBLUE, 100, 50), new Text(400, 100, Const.CREATORS, Const.MENU_FONT_S, Const.WHITE, true), MouseEvent.MOUSE_CLICKED, Const.CREATORS, Const.LIGHTBLUE, true, true),
         new Button(new Rect(600, 100, Const.DARKBLUE, 100, 50), new Text(600, 100, Const.ABOUT, Const.MENU_FONT_S, Const.WHITE, true), MouseEvent.MOUSE_CLICKED, Const.ABOUT, Const.LIGHTBLUE, true, true),
         //login button BELOW the text fields
-        new Button(new Rect(650, 550, Const.DARKBLUE, 100, 100), new Text(50, 200, Const.LOGIN, Const.MENU_FONT_S, Const.WHITE, true), MouseEvent.MOUSE_CLICKED, Const.LOGIN, Const.LIGHTBLUE, true, true),
+        new Button(new Rect(650, 550, Const.WHITE, 100, 100), new Text(50, 200, Const.LOGIN, Const.MENU_FONT_S, Const.PRIMARYBLACK, true), MouseEvent.MOUSE_CLICKED, Const.LOGIN, Const.LIGHTBLUE, true, true),
 
     };
 
