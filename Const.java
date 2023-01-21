@@ -19,6 +19,7 @@ public class Const {
 
     //  Other Buttons
     public static final String SEARCH = "SEARCH";
+    public static final String LOGIN = "LOGIN";
 
     //  Fonts
     private static final Font MENU_FONT = CustomFont.loadFont("Fonts/Myriad Pro Semibold.ttf", 10);

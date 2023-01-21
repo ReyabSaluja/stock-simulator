@@ -1,34 +1,49 @@
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
+import java.net.Socket;
 import java.util.ArrayList;
 import javax.swing.JFrame;
 import javax.swing.JTextField;
 import javax.swing.border.LineBorder;
-
-import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.Graphics;
-import java.awt.Insets;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.awt.event.FocusListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.FocusEvent;
+import java.awt.event.WindowListener;
+import java.awt.event.WindowEvent;
 
 public class StockMarketSimulator {
 
+    private JTextField loginField;
+    private JTextField passwordField;
+    private String userInformation;
     private JTextField searchField;
     private String search;
-
     private LineChart chart;
-
     private GraphicalUserInterface startUI, portfolioUI, tradeUI, creatorsUI, aboutUI;
     private JFrame window;
     private MenuMouseListener mouseListener;
     private MenuMotionListener mouseMotionListener;
-
     private String state = Const.START;
+    private final String LOCAL_HOST;
+    private final int PORT;
+    private Socket clientSocket;
+    private PrintWriter output;
+    private BufferedReader input;
+    private ConnectionTerminator connectionTerminator;
+    private boolean authenticated; 
+
     //----------------------------------------------------------------------------
     public StockMarketSimulator() {
+
+        //Network Initialization
+        LOCAL_HOST = "127.0.0.1";
+        PORT = 5000;
+        authenticated = false;
         //  Window Initialization
         window = new JFrame("Stock Simulator");
         window.setSize(Const.WIDTH, Const.HEIGHT);
@@ -56,7 +71,6 @@ public class StockMarketSimulator {
 
             @Override
             public void focusLost(FocusEvent e) {
-                searchField.setText("Focus Lost");
             }
         });
         //  Adding Search Field to Trade UI
@@ -65,15 +79,55 @@ public class StockMarketSimulator {
         searchField.setForeground(Const.LIGHTGREY);
         searchField.setBorder(new LineBorder(Const.LIGHTBLUE, 3, true));
         tradeUI.add(searchField);
+
+        userInformation = "";
+        loginField = new JTextField("", 15);
+        loginField.addFocusListener(new FocusListener() {
+            @Override
+            public void focusGained(FocusEvent e) {
+                loginField.setText("   Login");
+            }
+
+            @Override
+            public void focusLost(FocusEvent e) {
+            }
+        });
+        passwordField = new JTextField("", 15);
+        passwordField.addFocusListener(new FocusListener() {
+            @Override
+            public void focusGained(FocusEvent e) {
+                passwordField.setText("   Password");
+            }
+
+            @Override
+            public void focusLost(FocusEvent e) {
+            }
+        });
+        startUI.setLayout(null);
+        loginField.setBounds(Const.WIDTH/2 - 250, 350, 500, 70);
+        loginField.setForeground(Const.LIGHTGREY);
+        loginField.setBorder(new LineBorder(Const.LIGHTBLUE, 3, true));
+        startUI.add(loginField);
+
+        passwordField.setBounds(Const.WIDTH/2 - 250, 450, 500, 70);
+        passwordField.setForeground(Const.LIGHTGREY);
+        passwordField.setBorder(new LineBorder(Const.LIGHTBLUE, 3, true));
+        startUI.add(passwordField);
+
+        connectionTerminator = new ConnectionTerminator();
+        window.addWindowListener(connectionTerminator);
+       
+
+        
         //  Window
         window.setContentPane(startUI);
         window.setVisible(true);
     }
     //----------------------------------------------------------------------------
-    public void run() {
+    public void run() throws Exception {
         //	Main Game Loop
+        start();
         while (true) {
-            // System.out.println(searchField.getText());
             try {
                 window.repaint();
                 Thread.sleep(15);
@@ -81,6 +135,34 @@ public class StockMarketSimulator {
                 System.out.println(e);
             }
         }
+    }
+    //----------------------------------------------------------------------------
+    public void start() throws Exception {
+        System.out.println("ESTABLISHING CONNECTION TO SERVER---------------");
+        clientSocket = new Socket(LOCAL_HOST, PORT);
+        output = new PrintWriter(clientSocket.getOutputStream(), true);
+        input = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
+        System.out.println("CONNECTION ESTABLISHED--------------------------");
+    }
+
+    //----------------------------------------------------------------------------
+    public void stop() throws Exception {
+        System.out.println("CLOSING CONNECTION TO SERVER-------------------");
+        clientSocket.close();
+        output.close();
+        input.close();
+        System.out.println("CONNECTION CLOSED-------------------------------");
+    }
+
+    //----------------------------------------------------------------------------
+    public void sendServerMessage(String message) {
+        output.println(message);
+        output.flush();
+    }
+
+    //----------------------------------------------------------------------------
+    public String getServerMessage() throws Exception {
+        return input.readLine();
     }
     //----------------------------------------------------------------------------
     public class MenuMouseListener implements MouseListener {
@@ -125,6 +207,30 @@ public class StockMarketSimulator {
 
             hoverButtons(mouseX, mouseY);
         }
+    }
+
+    //----------------------------------------------------------------------------
+    public class ConnectionTerminator implements WindowListener {
+        public void windowClosing(WindowEvent e) {
+            try {
+                stop();
+            } catch (Exception e1) {
+                e1.printStackTrace();
+            }
+        }
+        public void windowOpened(WindowEvent e) { // MUST be implemented even if not used!
+        }
+        public void windowClosed(WindowEvent e) { // MUST be implemented even if not used!
+        }
+        public void windowIconified(WindowEvent e) { // MUST be implemented even if not used!
+        }
+        public void windowDeiconified(WindowEvent e) { // MUST be implemented even if not used!
+        }
+        public void windowActivated(WindowEvent e) { // MUST be implemented even if not used!
+        }
+        public void windowDeactivated(WindowEvent e) { // MUST be implemented even if not used!
+        }
+
     }
     //----------------------------------------------------------------------------
     /** 
@@ -255,23 +361,23 @@ public class StockMarketSimulator {
             state = Const.START;
             window.setContentPane(startUI);
             startUI.requestFocus();
-        } else if (buttonFunction.equalsIgnoreCase(Const.PORTFOLIO)) {
+        } else if (buttonFunction.equalsIgnoreCase(Const.PORTFOLIO) && authenticated) {
             state = Const.PORTFOLIO;
             window.setContentPane(portfolioUI);
             portfolioUI.requestFocus();
             ((Button) portfolioItems[3]).setTextColor(Const.LIGHTBLUE);
-        } else if (buttonFunction.equalsIgnoreCase(Const.TRADE)) {
+        } else if (buttonFunction.equalsIgnoreCase(Const.TRADE) && authenticated) {
             state = Const.TRADE;
             tradeUI.requestFocus();
             window.setContentPane(tradeUI);
             searchField.requestFocusInWindow();
             ((Button) tradeItems[4]).setTextColor(Const.LIGHTBLUE);
-        } else if (buttonFunction.equalsIgnoreCase(Const.CREATORS)) {
+        } else if (buttonFunction.equalsIgnoreCase(Const.CREATORS) && authenticated) {
             state = Const.CREATORS;
             window.setContentPane(creatorsUI);
             creatorsUI.requestFocus();
             ((Button) creatorsItems[5]).setTextColor(Const.LIGHTBLUE);
-        } else if (buttonFunction.equalsIgnoreCase(Const.ABOUT)) {
+        } else if (buttonFunction.equalsIgnoreCase(Const.ABOUT) && authenticated) {
             state = Const.ABOUT;
             window.setContentPane(aboutUI);
             aboutUI.requestFocus();
@@ -291,6 +397,22 @@ public class StockMarketSimulator {
             // System.out.println(newStock.getTicker() + newStock.getPrice() + newStock.getChange() + newStock.getChangePercentage());
             //  Adding Chart to Trade UI
             tradeUI.add(chart);
+        } else if (buttonFunction.equalsIgnoreCase(Const.LOGIN)) {
+            String loginStatus = "";
+            String userName = loginField.getText();
+            String password = passwordField.getText();
+            String userInformation = userName + "/" + password;
+            output.println(userInformation);
+            output.flush();
+            try {
+                loginStatus = input.readLine();
+            } catch (IOException e) {
+                System.out.println("Error!");
+            }
+
+            if (loginStatus.equalsIgnoreCase("Authenticated!")) {
+                authenticated = true;
+            }
         }
     }
     //----------------------------------------------------------------------------
@@ -302,7 +424,10 @@ public class StockMarketSimulator {
         new Button(new Rect(50, 100, Const.DARKBLUE, 100, 50), new Text(50, 100, Const.PORTFOLIO, Const.MENU_FONT_S, Const.WHITE, true), MouseEvent.MOUSE_CLICKED, Const.PORTFOLIO, Const.LIGHTBLUE, true, true),
         new Button(new Rect(250, 100, Const.DARKBLUE, 100, 50), new Text(250, 100, Const.TRADE, Const.MENU_FONT_S, Const.WHITE, true), MouseEvent.MOUSE_CLICKED, Const.TRADE, Const.LIGHTBLUE, true, true),
         new Button(new Rect(400, 100, Const.DARKBLUE, 100, 50), new Text(400, 100, Const.CREATORS, Const.MENU_FONT_S, Const.WHITE, true), MouseEvent.MOUSE_CLICKED, Const.CREATORS, Const.LIGHTBLUE, true, true),
-        new Button(new Rect(600, 100, Const.DARKBLUE, 100, 50), new Text(600, 100, Const.ABOUT, Const.MENU_FONT_S, Const.WHITE, true), MouseEvent.MOUSE_CLICKED, Const.ABOUT, Const.LIGHTBLUE, true, true)
+        new Button(new Rect(600, 100, Const.DARKBLUE, 100, 50), new Text(600, 100, Const.ABOUT, Const.MENU_FONT_S, Const.WHITE, true), MouseEvent.MOUSE_CLICKED, Const.ABOUT, Const.LIGHTBLUE, true, true),
+        //login button BELOW the text fields
+        new Button(new Rect(650, 550, Const.DARKBLUE, 100, 100), new Text(50, 200, Const.LOGIN, Const.MENU_FONT_S, Const.WHITE, true), MouseEvent.MOUSE_CLICKED, Const.LOGIN, Const.LIGHTBLUE, true, true),
+
     };
 
     GraphicalUserInterfaceItem[] portfolioItems = {
@@ -350,6 +475,14 @@ public class StockMarketSimulator {
     //----------------------------------------------------------------------------
     public static void main(String[] args) throws IOException {
         StockMarketSimulator simulator = new StockMarketSimulator();
-        simulator.run();
+        try {
+            simulator.run();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+
+
+
     }
 }
