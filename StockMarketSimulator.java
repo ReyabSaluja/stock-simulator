@@ -29,7 +29,7 @@ public class StockMarketSimulator {
     private JComboBox actionField;
     private JTextField quantityField;
 
-    private GraphicalUserInterface startUI, portfolioUI, tradeUI, creatorsUI, aboutUI;
+    private GraphicalUserInterface loginUI, portfolioUI, tradeUI, creatorsUI, aboutUI;
     private JFrame window;
     private MenuMouseListener mouseListener;
     private MenuMotionListener mouseMotionListener;
@@ -49,7 +49,7 @@ public class StockMarketSimulator {
         //Network Initialization
         LOCAL_HOST = "127.0.0.1";
         PORT = 5001;
-        authenticated = true;
+        authenticated = false;
         //  Window Initialization
         window = new JFrame("Stock Simulator");
         window.setSize(Const.WIDTH, Const.HEIGHT);
@@ -62,7 +62,7 @@ public class StockMarketSimulator {
         window.addMouseListener(mouseListener);
         window.addMouseMotionListener(mouseMotionListener);
         //  Panels Initialization
-        startUI = new GraphicalUserInterface(0, 0, Const.WIDTH, Const.HEIGHT, Const.WHITE, startItems);
+        loginUI = new GraphicalUserInterface(0, 0, Const.WIDTH, Const.HEIGHT, Const.WHITE, startItems);
         portfolioUI = new GraphicalUserInterface(0, 0, Const.WIDTH, Const.HEIGHT, Const.WHITE, portfolioItems);
         tradeUI = new GraphicalUserInterface(0, 0, Const.WIDTH, Const.HEIGHT, Const.WHITE, tradeItems);
         creatorsUI = new GraphicalUserInterface(0, 0, Const.WIDTH, Const.HEIGHT, Const.WHITE, creatorsItems);
@@ -109,17 +109,17 @@ public class StockMarketSimulator {
             public void focusLost(FocusEvent e) {
             }
         });
-        startUI.setLayout(null);
+        loginUI.setLayout(null);
         //  Username Field
         usernameField.setBounds(Const.WIDTH/2 - 250, 250, 500, 70);
         usernameField.setForeground(Const.LIGHTGREY);
         usernameField.setBorder(new LineBorder(Const.LIGHTBLUE, 3, true));
-        startUI.add(usernameField);
+        loginUI.add(usernameField);
         //  Password Field
         passwordField.setBounds(Const.WIDTH/2 - 250, 350, 500, 70);
         passwordField.setForeground(Const.LIGHTGREY);
         passwordField.setBorder(new LineBorder(Const.LIGHTBLUE, 3, true));
-        startUI.add(passwordField);
+        loginUI.add(passwordField);
         //  Action Field
         String[] actions = {"BUY", "SELL"};
         actionField = new JComboBox(actions);
@@ -146,7 +146,7 @@ public class StockMarketSimulator {
         connectionTerminator = new ConnectionTerminator();
         window.addWindowListener(connectionTerminator);
         //  Window
-        window.setContentPane(tradeUI);
+        window.setContentPane(loginUI);
         window.setVisible(true);
     }
     //----------------------------------------------------------------------------
@@ -268,12 +268,12 @@ public class StockMarketSimulator {
      */
     public void hoverButtons(int mouseX, int mouseY) {
         if (state.equalsIgnoreCase(Const.START)) {
-            startUI.resetButtons();
+            loginUI.resetButtons();
 
-            ArrayList < Integer > hoveredButtons = startUI.findCollidedButtons(mouseX, mouseY);
+            ArrayList < Integer > hoveredButtons = loginUI.findCollidedButtons(mouseX, mouseY);
 
             for (int hoveredButtonIndex: hoveredButtons) {
-                Button hoveredButton = ((Button) startUI.getMenuItem(hoveredButtonIndex));
+                Button hoveredButton = ((Button) loginUI.getMenuItem(hoveredButtonIndex));
 
                 hoveredButton.hoveredColor();
             }
@@ -330,10 +330,10 @@ public class StockMarketSimulator {
      */
     public void callRanButtons(int mouseX, int mouseY, int mouseEvent) {
         if (state.equalsIgnoreCase(Const.START)) {
-            ArrayList < Integer > ranButtons = startUI.findCollidedButtons(mouseX, mouseY);
+            ArrayList < Integer > ranButtons = loginUI.findCollidedButtons(mouseX, mouseY);
 
             for (int ranButtonIndex: ranButtons) {
-                Button ranButton = ((Button) startUI.getMenuItem(ranButtonIndex));
+                Button ranButton = ((Button) loginUI.getMenuItem(ranButtonIndex));
                 if (ranButton.checkButtonType(mouseEvent)) {
                     runButtonFunction(ranButton.getButtonFunction());
                 }
@@ -385,8 +385,8 @@ public class StockMarketSimulator {
     public void runButtonFunction(String buttonFunction) {
         if (buttonFunction.equalsIgnoreCase(Const.START)) {
             state = Const.START;
-            window.setContentPane(startUI);
-            startUI.requestFocus();
+            window.setContentPane(loginUI);
+            loginUI.requestFocus();
         } else if (buttonFunction.equalsIgnoreCase(Const.PORTFOLIO) && authenticated) {
             state = Const.PORTFOLIO;
             window.setContentPane(portfolioUI);
