@@ -4,6 +4,8 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
 import java.util.ArrayList;
+
+import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JTextField;
 import javax.swing.border.LineBorder;
@@ -18,32 +20,36 @@ import java.awt.event.WindowEvent;
 
 public class StockMarketSimulator {
 
-    private JTextField loginField;
+    private JTextField usernameField;
     private JTextField passwordField;
     private String userInformation;
     private JTextField searchField;
     private String search;
     private LineChart chart;
+    private JComboBox actionField;
+    private JTextField quantityField;
+
     private GraphicalUserInterface startUI, portfolioUI, tradeUI, creatorsUI, aboutUI;
     private JFrame window;
     private MenuMouseListener mouseListener;
     private MenuMotionListener mouseMotionListener;
+
     private String state = Const.START;
+
     private final String LOCAL_HOST;
     private final int PORT;
     private Socket clientSocket;
     private PrintWriter output;
     private BufferedReader input;
     private ConnectionTerminator connectionTerminator;
-    private boolean authenticated;
+    private boolean authenticated; 
 
     //----------------------------------------------------------------------------
     public StockMarketSimulator() {
-
         //Network Initialization
         LOCAL_HOST = "127.0.0.1";
-        PORT = 5000;
-        authenticated = false;
+        PORT = 5001;
+        authenticated = true;
         //  Window Initialization
         window = new JFrame("Stock Simulator");
         window.setSize(Const.WIDTH, Const.HEIGHT);
@@ -70,7 +76,8 @@ public class StockMarketSimulator {
             }
 
             @Override
-            public void focusLost(FocusEvent e) {}
+            public void focusLost(FocusEvent e) {
+            }
         });
         //  Adding Search Field to Trade UI
         tradeUI.setLayout(null);
@@ -80,15 +87,16 @@ public class StockMarketSimulator {
         tradeUI.add(searchField);
 
         userInformation = "";
-        loginField = new JTextField("", 15);
-        loginField.addFocusListener(new FocusListener() {
+        usernameField = new JTextField("", 15);
+        usernameField.addFocusListener(new FocusListener() {
             @Override
             public void focusGained(FocusEvent e) {
-                loginField.setText("   Login");
+                usernameField.setText("   Username");
             }
 
             @Override
-            public void focusLost(FocusEvent e) {}
+            public void focusLost(FocusEvent e) {
+            }
         });
         passwordField = new JTextField("", 15);
         passwordField.addFocusListener(new FocusListener() {
@@ -98,24 +106,47 @@ public class StockMarketSimulator {
             }
 
             @Override
-            public void focusLost(FocusEvent e) {}
+            public void focusLost(FocusEvent e) {
+            }
         });
         startUI.setLayout(null);
-        loginField.setBounds(Const.WIDTH / 2 - 250, 350, 500, 70);
-        loginField.setForeground(Const.LIGHTGREY);
-        loginField.setBorder(new LineBorder(Const.LIGHTBLUE, 3, true));
-        startUI.add(loginField);
-
-        passwordField.setBounds(Const.WIDTH / 2 - 250, 450, 500, 70);
+        //  Username Field
+        usernameField.setBounds(Const.WIDTH/2 - 250, 250, 500, 70);
+        usernameField.setForeground(Const.LIGHTGREY);
+        usernameField.setBorder(new LineBorder(Const.LIGHTBLUE, 3, true));
+        startUI.add(usernameField);
+        //  Password Field
+        passwordField.setBounds(Const.WIDTH/2 - 250, 350, 500, 70);
         passwordField.setForeground(Const.LIGHTGREY);
         passwordField.setBorder(new LineBorder(Const.LIGHTBLUE, 3, true));
         startUI.add(passwordField);
+        //  Action Field
+        String[] actions = {"BUY", "SELL"};
+        actionField = new JComboBox(actions);
+        actionField.setBounds(50, 250, 200, 300);
+        actionField.setForeground(Const.PRIMARYBLACK);
+        tradeUI.add(actionField);
+        //  Quantity Field
+        quantityField = new JTextField("", 15);
+        quantityField.addFocusListener(new FocusListener() {
+            @Override
+            public void focusGained(FocusEvent e) {
+                passwordField.setText("   Quantity");
+            }
+
+            @Override
+            public void focusLost(FocusEvent e) {
+            }
+        });
+        quantityField.setBounds(50, 475, 500, 70);
+        quantityField.setForeground(Const.LIGHTGREY);
+        quantityField.setBorder(new LineBorder(Const.LIGHTBLUE, 3, true));
+        tradeUI.add(quantityField);
 
         connectionTerminator = new ConnectionTerminator();
         window.addWindowListener(connectionTerminator);
-
         //  Window
-        window.setContentPane(startUI);
+        window.setContentPane(tradeUI);
         window.setVisible(true);
     }
     //----------------------------------------------------------------------------
@@ -203,6 +234,7 @@ public class StockMarketSimulator {
             hoverButtons(mouseX, mouseY);
         }
     }
+
     //----------------------------------------------------------------------------
     public class ConnectionTerminator implements WindowListener {
         public void windowClosing(WindowEvent e) {
@@ -393,9 +425,9 @@ public class StockMarketSimulator {
             tradeUI.add(chart);
         } else if (buttonFunction.equalsIgnoreCase(Const.LOGIN)) {
             String loginStatus = "";
-            String userName = loginField.getText();
+            String username = usernameField.getText();
             String password = passwordField.getText();
-            String userInformation = userName + "/" + password;
+            String userInformation = username + "/" + password;
             output.println(userInformation);
             output.flush();
             try {
@@ -407,64 +439,65 @@ public class StockMarketSimulator {
             if (loginStatus.equalsIgnoreCase("Authenticated!")) {
                 authenticated = true;
             }
+            state = Const.PORTFOLIO;
+            window.setContentPane(portfolioUI);
+            portfolioUI.requestFocus();
         }
     }
     //----------------------------------------------------------------------------
     //  Graphical User Interfaces
     GraphicalUserInterfaceItem[] startItems = {
-        new Image(0, 0, Const.GUI_START_IMAGE),
-        new Text(50, 15, "Stock", Const.MENU_FONT_XL, Const.WHITE, true),
-        new Text(195, 15, "Scraper", Const.MENU_FONT_XL_BOLD, Const.LIGHTBLUE, true),
-        new Button(new Rect(50, 100, Const.DARKBLUE, 100, 50), new Text(50, 100, Const.PORTFOLIO, Const.MENU_FONT_S, Const.WHITE, true), MouseEvent.MOUSE_CLICKED, Const.PORTFOLIO, Const.LIGHTBLUE, true, true),
-        new Button(new Rect(250, 100, Const.DARKBLUE, 100, 50), new Text(250, 100, Const.TRADE, Const.MENU_FONT_S, Const.WHITE, true), MouseEvent.MOUSE_CLICKED, Const.TRADE, Const.LIGHTBLUE, true, true),
-        new Button(new Rect(400, 100, Const.DARKBLUE, 100, 50), new Text(400, 100, Const.CREATORS, Const.MENU_FONT_S, Const.WHITE, true), MouseEvent.MOUSE_CLICKED, Const.CREATORS, Const.LIGHTBLUE, true, true),
-        new Button(new Rect(600, 100, Const.DARKBLUE, 100, 50), new Text(600, 100, Const.ABOUT, Const.MENU_FONT_S, Const.WHITE, true), MouseEvent.MOUSE_CLICKED, Const.ABOUT, Const.LIGHTBLUE, true, true),
-        //login button BELOW the text fields
-        new Button(new Rect(650, 550, Const.WHITE, 100, 100), new Text(50, 200, Const.LOGIN, Const.MENU_FONT_S, Const.PRIMARYBLACK, true), MouseEvent.MOUSE_CLICKED, Const.LOGIN, Const.LIGHTBLUE, true, true),
-
+        //  Login button BELOW the text fields
+        new Text(570, 130, "Stock", Const.OPENSANS_BOLD_M, Const.PRIMARYBLACK, true),
+        new Text(665, 130, "Simulator", Const.OPENSANS_BOLD_M, Const.DARKBLUE, true),
+        new Button(new Rect(630, 450, Const.DARKBLUE, 150, 50), new Text(60, 180, "", Const.OPENSANS_BOLD_S, Const.WHITE, true), MouseEvent.MOUSE_CLICKED, Const.LOGIN, Const.LIGHTBLUE, false, false),
+        new Text(660, 450, "Sign In", Const.OPENSANS_BOLD_S, Const.WHITE, true),
+        new Text(Const.WIDTH/2 - 250, 200, "Log In", Const.OPENSANS_S, Const.PRIMARYBLACK, true)
     };
 
     GraphicalUserInterfaceItem[] portfolioItems = {
         new Image(0, 0, Const.GUI_START_IMAGE),
-        new Text(50, 15, "Stock", Const.MENU_FONT_XL, Const.WHITE, true),
-        new Text(195, 15, "Scraper", Const.MENU_FONT_XL_BOLD, Const.LIGHTBLUE, true),
-        new Button(new Rect(50, 100, Const.DARKBLUE, 100, 50), new Text(50, 100, Const.PORTFOLIO, Const.MENU_FONT_S, Const.WHITE, true), MouseEvent.MOUSE_CLICKED, Const.PORTFOLIO, Const.LIGHTBLUE, true, true),
-        new Button(new Rect(250, 100, Const.DARKBLUE, 100, 50), new Text(250, 100, Const.TRADE, Const.MENU_FONT_S, Const.WHITE, true), MouseEvent.MOUSE_CLICKED, Const.TRADE, Const.LIGHTBLUE, true, true),
-        new Button(new Rect(400, 100, Const.DARKBLUE, 100, 50), new Text(400, 100, Const.CREATORS, Const.MENU_FONT_S, Const.WHITE, true), MouseEvent.MOUSE_CLICKED, Const.CREATORS, Const.LIGHTBLUE, true, true),
-        new Button(new Rect(600, 100, Const.DARKBLUE, 100, 50), new Text(600, 100, Const.ABOUT, Const.MENU_FONT_S, Const.WHITE, true), MouseEvent.MOUSE_CLICKED, Const.ABOUT, Const.LIGHTBLUE, true, true)
+        new Text(50, 15, "Stock", Const.OPENSANS_BOLD_L, Const.WHITE, true),
+        new Text(185, 15, "Simulator", Const.OPENSANS_BOLD_L, Const.LIGHTBLUE, true),
+        new Button(new Rect(50, 100, Const.DARKBLUE, 100, 50), new Text(50, 100, Const.PORTFOLIO, Const.OPENSANS_BOLD_S, Const.WHITE, true), MouseEvent.MOUSE_CLICKED, Const.PORTFOLIO, Const.LIGHTBLUE, true, true),
+        new Button(new Rect(225, 100, Const.DARKBLUE, 100, 50), new Text(250, 100, Const.TRADE, Const.OPENSANS_BOLD_S, Const.WHITE, true), MouseEvent.MOUSE_CLICKED, Const.TRADE, Const.LIGHTBLUE, true, true),
+        new Button(new Rect(350, 100, Const.DARKBLUE, 100, 50), new Text(400, 100, Const.CREATORS, Const.OPENSANS_BOLD_S, Const.WHITE, true), MouseEvent.MOUSE_CLICKED, Const.CREATORS, Const.LIGHTBLUE, true, true),
+        new Button(new Rect(525, 100, Const.DARKBLUE, 100, 50), new Text(600, 100, Const.ABOUT, Const.OPENSANS_BOLD_S, Const.WHITE, true), MouseEvent.MOUSE_CLICKED, Const.ABOUT, Const.LIGHTBLUE, true, true)
     };
 
     GraphicalUserInterfaceItem[] tradeItems = {
         new Image(0, 0, Const.GUI_START_IMAGE),
-        new Text(50, 15, "Stock", Const.MENU_FONT_XL, Const.WHITE, true),
-        new Text(195, 15, "Scraper", Const.MENU_FONT_XL_BOLD, Const.LIGHTBLUE, true),
-        new Button(new Rect(50, 100, Const.DARKBLUE, 100, 50), new Text(50, 100, Const.PORTFOLIO, Const.MENU_FONT_S, Const.WHITE, true), MouseEvent.MOUSE_CLICKED, Const.PORTFOLIO, Const.LIGHTBLUE, true, true),
-        new Button(new Rect(250, 100, Const.DARKBLUE, 100, 50), new Text(250, 100, Const.TRADE, Const.MENU_FONT_S, Const.WHITE, true), MouseEvent.MOUSE_CLICKED, Const.TRADE, Const.LIGHTBLUE, true, true),
-        new Button(new Rect(400, 100, Const.DARKBLUE, 100, 50), new Text(400, 100, Const.CREATORS, Const.MENU_FONT_S, Const.WHITE, true), MouseEvent.MOUSE_CLICKED, Const.CREATORS, Const.LIGHTBLUE, true, true),
-        new Button(new Rect(600, 100, Const.DARKBLUE, 100, 50), new Text(600, 100, Const.ABOUT, Const.MENU_FONT_S, Const.WHITE, true), MouseEvent.MOUSE_CLICKED, Const.ABOUT, Const.LIGHTBLUE, true, true),
-        new Text(50, 250, "Symbol", Const.ARIAL_FONT, Const.DARKGREY, true),
-        new Button(new Rect(555, 305, Const.WHITE, 100, 50), new Text(600, 100, Const.SEARCH, Const.MENU_FONT_S, Const.PRIMARYBLACK, true), MouseEvent.MOUSE_CLICKED, Const.SEARCH, Const.LIGHTBLUE, true, true),
-        new Image(555, 280, Const.SEARCH_ICON_IMAGE)
+        new Text(50, 15, "Stock", Const.OPENSANS_BOLD_L, Const.WHITE, true),
+        new Text(185, 15, "Simulator", Const.OPENSANS_BOLD_L, Const.LIGHTBLUE, true),
+        new Button(new Rect(50, 100, Const.DARKBLUE, 100, 50), new Text(50, 100, Const.PORTFOLIO, Const.OPENSANS_BOLD_S, Const.WHITE, true), MouseEvent.MOUSE_CLICKED, Const.PORTFOLIO, Const.LIGHTBLUE, true, true),
+        new Button(new Rect(225, 100, Const.DARKBLUE, 100, 50), new Text(250, 100, Const.TRADE, Const.OPENSANS_BOLD_S, Const.WHITE, true), MouseEvent.MOUSE_CLICKED, Const.TRADE, Const.LIGHTBLUE, true, true),
+        new Button(new Rect(350, 100, Const.DARKBLUE, 100, 50), new Text(400, 100, Const.CREATORS, Const.OPENSANS_BOLD_S, Const.WHITE, true), MouseEvent.MOUSE_CLICKED, Const.CREATORS, Const.LIGHTBLUE, true, true),
+        new Button(new Rect(525, 100, Const.DARKBLUE, 100, 50), new Text(600, 100, Const.ABOUT, Const.OPENSANS_BOLD_S, Const.WHITE, true), MouseEvent.MOUSE_CLICKED, Const.ABOUT, Const.LIGHTBLUE, true, true),
+        new Text(50, 245, "Symbol", Const.OPENSANS_XXS, Const.DARKGREY, true),
+        new Button(new Rect(555, 305, Const.WHITE, 100, 50), new Text(600, 100, Const.SEARCH, Const.MYRIAD_S, Const.PRIMARYBLACK, true), MouseEvent.MOUSE_CLICKED, Const.SEARCH, Const.LIGHTBLUE, true, true),
+        new Image(555, 280, Const.SEARCH_ICON_IMAGE),
+        new Text(50, 355, "Action", Const.OPENSANS_XXS, Const.DARKGREY, true),
+        new Text(50, 445, "Quantity", Const.OPENSANS_XXS, Const.DARKGREY, true)
     };
 
     GraphicalUserInterfaceItem[] creatorsItems = {
         new Image(0, 0, Const.GUI_START_IMAGE),
-        new Text(50, 15, "Stock", Const.MENU_FONT_XL, Const.WHITE, true),
-        new Text(195, 15, "Scraper", Const.MENU_FONT_XL_BOLD, Const.LIGHTBLUE, true),
-        new Button(new Rect(50, 100, Const.DARKBLUE, 100, 50), new Text(50, 100, Const.PORTFOLIO, Const.MENU_FONT_S, Const.WHITE, true), MouseEvent.MOUSE_CLICKED, Const.PORTFOLIO, Const.LIGHTBLUE, true, true),
-        new Button(new Rect(250, 100, Const.DARKBLUE, 100, 50), new Text(250, 100, Const.TRADE, Const.MENU_FONT_S, Const.WHITE, true), MouseEvent.MOUSE_CLICKED, Const.TRADE, Const.LIGHTBLUE, true, true),
-        new Button(new Rect(400, 100, Const.DARKBLUE, 100, 50), new Text(400, 100, Const.CREATORS, Const.MENU_FONT_S, Const.WHITE, true), MouseEvent.MOUSE_CLICKED, Const.CREATORS, Const.LIGHTBLUE, true, true),
-        new Button(new Rect(600, 100, Const.DARKBLUE, 100, 50), new Text(600, 100, Const.ABOUT, Const.MENU_FONT_S, Const.WHITE, true), MouseEvent.MOUSE_CLICKED, Const.ABOUT, Const.LIGHTBLUE, true, true)
+        new Text(50, 15, "Stock", Const.OPENSANS_BOLD_L, Const.WHITE, true),
+        new Text(185, 15, "Simulator", Const.OPENSANS_BOLD_L, Const.LIGHTBLUE, true),
+        new Button(new Rect(50, 100, Const.DARKBLUE, 100, 50), new Text(50, 100, Const.PORTFOLIO, Const.OPENSANS_BOLD_S, Const.WHITE, true), MouseEvent.MOUSE_CLICKED, Const.PORTFOLIO, Const.LIGHTBLUE, true, true),
+        new Button(new Rect(225, 100, Const.DARKBLUE, 100, 50), new Text(250, 100, Const.TRADE, Const.OPENSANS_BOLD_S, Const.WHITE, true), MouseEvent.MOUSE_CLICKED, Const.TRADE, Const.LIGHTBLUE, true, true),
+        new Button(new Rect(350, 100, Const.DARKBLUE, 100, 50), new Text(400, 100, Const.CREATORS, Const.OPENSANS_BOLD_S, Const.WHITE, true), MouseEvent.MOUSE_CLICKED, Const.CREATORS, Const.LIGHTBLUE, true, true),
+        new Button(new Rect(525, 100, Const.DARKBLUE, 100, 50), new Text(600, 100, Const.ABOUT, Const.OPENSANS_BOLD_S, Const.WHITE, true), MouseEvent.MOUSE_CLICKED, Const.ABOUT, Const.LIGHTBLUE, true, true)
     };
 
     GraphicalUserInterfaceItem[] aboutItems = {
         new Image(0, 0, Const.GUI_START_IMAGE),
-        new Text(50, 15, "Stock", Const.MENU_FONT_XL, Const.WHITE, true),
-        new Text(195, 15, "Scraper", Const.MENU_FONT_XL_BOLD, Const.LIGHTBLUE, true),
-        new Button(new Rect(50, 100, Const.DARKBLUE, 100, 50), new Text(50, 100, Const.PORTFOLIO, Const.MENU_FONT_S, Const.WHITE, true), MouseEvent.MOUSE_CLICKED, Const.PORTFOLIO, Const.LIGHTBLUE, true, true),
-        new Button(new Rect(250, 100, Const.DARKBLUE, 100, 50), new Text(250, 100, Const.TRADE, Const.MENU_FONT_S, Const.WHITE, true), MouseEvent.MOUSE_CLICKED, Const.TRADE, Const.LIGHTBLUE, true, true),
-        new Button(new Rect(400, 100, Const.DARKBLUE, 100, 50), new Text(400, 100, Const.CREATORS, Const.MENU_FONT_S, Const.WHITE, true), MouseEvent.MOUSE_CLICKED, Const.CREATORS, Const.LIGHTBLUE, true, true),
-        new Button(new Rect(600, 100, Const.DARKBLUE, 100, 50), new Text(600, 100, Const.ABOUT, Const.MENU_FONT_S, Const.WHITE, true), MouseEvent.MOUSE_CLICKED, Const.ABOUT, Const.LIGHTBLUE, true, true)
+        new Text(50, 15, "Stock", Const.OPENSANS_BOLD_L, Const.WHITE, true),
+        new Text(185, 15, "Simulator", Const.OPENSANS_BOLD_L, Const.LIGHTBLUE, true),
+        new Button(new Rect(50, 100, Const.DARKBLUE, 100, 50), new Text(50, 100, Const.PORTFOLIO, Const.OPENSANS_BOLD_S, Const.WHITE, true), MouseEvent.MOUSE_CLICKED, Const.PORTFOLIO, Const.LIGHTBLUE, true, true),
+        new Button(new Rect(225, 100, Const.DARKBLUE, 100, 50), new Text(250, 100, Const.TRADE, Const.OPENSANS_BOLD_S, Const.WHITE, true), MouseEvent.MOUSE_CLICKED, Const.TRADE, Const.LIGHTBLUE, true, true),
+        new Button(new Rect(350, 100, Const.DARKBLUE, 100, 50), new Text(400, 100, Const.CREATORS, Const.OPENSANS_BOLD_S, Const.WHITE, true), MouseEvent.MOUSE_CLICKED, Const.CREATORS, Const.LIGHTBLUE, true, true),
+        new Button(new Rect(525, 100, Const.DARKBLUE, 100, 50), new Text(600, 100, Const.ABOUT, Const.OPENSANS_BOLD_S, Const.WHITE, true), MouseEvent.MOUSE_CLICKED, Const.ABOUT, Const.LIGHTBLUE, true, true)
     };
     //----------------------------------------------------------------------------
     public static void main(String[] args) throws IOException {

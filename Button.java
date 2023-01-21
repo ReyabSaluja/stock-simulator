@@ -34,6 +34,8 @@ public class Button extends GraphicalUserInterfaceItem {
         if (inheritSize) {
             this.rect.setWidth(this.text.getWidth());
             this.rect.setHeight(this.text.getHeight());
+        } else {
+
         }
 
         if (isCentered) {

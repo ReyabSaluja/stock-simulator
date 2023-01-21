@@ -22,17 +22,27 @@ public class Const {
     public static final String LOGIN = "LOG IN";
 
     //  Fonts
-    private static final Font MENU_FONT = CustomFont.loadFont("Fonts/Myriad Pro Semibold.ttf", 10);
+    private static final Font MYRIAD = CustomFont.loadFont("Fonts/Myriad Pro Semibold.ttf", 10);
+    public static final Font MYRIAD_XS = MYRIAD.deriveFont(20f);
+    public static final Font MYRIAD_S = MYRIAD.deriveFont(30f);
+    public static final Font MYRIAD_M = MYRIAD.deriveFont(40f);
+    public static final Font MYRIAD_L = MYRIAD.deriveFont(50f);
+    public static final Font MYRIAD_XL = MYRIAD.deriveFont(60f);
 
-    public static final Font MENU_FONT_XS = MENU_FONT.deriveFont(20f);
-    public static final Font MENU_FONT_S = MENU_FONT.deriveFont(30f);
-    public static final Font MENU_FONT_M = MENU_FONT.deriveFont(40f);
-    public static final Font MENU_FONT_L = MENU_FONT.deriveFont(50f);
-    public static final Font MENU_FONT_XL = MENU_FONT.deriveFont(60f);
+    public static final Font ARIAL = new Font("Arial", Font.PLAIN, 15);
 
-    public static final Font MENU_FONT_XL_BOLD = MENU_FONT.deriveFont(Font.BOLD, 60f);
+    private static final Font OPENSANS = CustomFont.loadFont("Fonts/OpenSans-Regular.ttf", 10);
+    public static final Font OPENSANS_XXS = OPENSANS.deriveFont(15f);
+    public static final Font OPENSANS_XS = OPENSANS.deriveFont(20f);
+    public static final Font OPENSANS_S = OPENSANS.deriveFont(25f);
+    public static final Font OPENSANS_M = OPENSANS.deriveFont(40f);
+    public static final Font OPENSANS_L = OPENSANS.deriveFont(50f);
+    public static final Font OPENSANS_XL = OPENSANS.deriveFont(60f);
 
-    public static final Font ARIAL_FONT = new Font("Arial", Font.PLAIN, 15);
+    private static final Font OPENSANSBOLD = CustomFont.loadFont("Fonts/OpenSans-Semibold.ttf", 10);
+    public static final Font OPENSANS_BOLD_S = OPENSANSBOLD.deriveFont(25f);
+    public static final Font OPENSANS_BOLD_M = OPENSANSBOLD.deriveFont(35f);
+    public static final Font OPENSANS_BOLD_L = OPENSANSBOLD.deriveFont(50f);
 
     //  Colors
     public static final Color WHITE = new Color (255, 255, 255);
