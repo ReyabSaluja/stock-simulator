@@ -38,13 +38,8 @@ public class Holding {
      
      //Precondition is that order is the same stock as holding
      public void updateHolding (Order order) {
-         if (order.getOrderType().equals(this.holdingType)) {
-             this.quantity = this.quantity + order.getQuantity();
-             this.holdingAmount = this.holdingAmount + order.getorderAmount();
-         } else {
-             this.quantity = this.quantity - order.getQuantity();
-             this.holdingAmount = this.holdingAmount - order.getorderAmount();
-         }
+         this.quantity = this.quantity + order.getQuantity();
+         this.holdingAmount = this.holdingAmount + order.getorderAmount();
      }
  
      public String getHoldingType() {

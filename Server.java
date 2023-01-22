@@ -144,7 +144,8 @@ public class Server {
                 	output.flush();
                 }
                 int portfolioIndex = getUserIndex(login);
-            	output.println(portfolioList.get(portfolioIndex).deconstruct());
+                Portfolio userPortfolio = portfolioList.get(portfolioIndex);
+            	output.println(userPortfolio.deconstruct());
             	output.flush();
                 
                 //TRADE HANDLER
@@ -157,7 +158,9 @@ public class Server {
                 	} else {
                 		String[] orderComponents = order.split("/");
                 		Order submittedOrder = new Order(orderComponents[0], orderComponents[1], orderComponents[2], orderComponents[3]);
-                		
+                		userPortfolio.updatePortfolio(submittedOrder);
+                		output.println(userPortfolio.deconstruct());
+                		output.flush();
                 		
                 	}
                 	

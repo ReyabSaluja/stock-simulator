@@ -469,7 +469,7 @@ public class StockMarketSimulator {
             window.setContentPane(portfolioUI);
             portfolioUI.requestFocus();
         } else if (buttonFunction.equalsIgnoreCase(Const.SUBMIT)) {
-
+            String updatedPortfolio = "";
             String ticker = searchField.getText();
             String quantity = quantityField.getText();
             String orderType = actionField.getSelectedItem().toString();
@@ -478,7 +478,16 @@ public class StockMarketSimulator {
             String submitStockPrice = submitStockPrices.get(submitStockPrices.size() - 1).toString();
             String orderInformation = orderType + "/" + ticker + "/" + quantity + "/" + submitStockPrice;
             output.println(orderInformation);
+            System.out.println("Sent!");
             output.flush();
+
+            try {
+                updatedPortfolio = input.readLine();
+            } catch (IOException e) {
+                System.out.println("Error!");
+            }
+            portfolio = buildPortfolio(updatedPortfolio);
+            System.out.println(portfolio.deconstruct());
            
         }
     }

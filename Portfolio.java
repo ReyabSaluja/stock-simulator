@@ -7,11 +7,20 @@ public class Portfolio {
 		this.portfolio = portfolio;
 	}
 	
+	//If a holding has a 0 quantity, then it will be removed from the portfolio
+	public void eliminateShellOrders() {
+		for (int i = 0; i < portfolio.size(); i++) {
+			if (portfolio.get(i).getQuantity() == 0) {
+				portfolio.remove(i);
+			}
+		}
+	}
+	
 	public void updatePortfolio(Order order) {
 		
 		boolean holdingExists = false;
 		for (int i = 0; i < portfolio.size(); i++) {
-			if (portfolio.get(i).verifyOrder(order)) {
+			if (portfolio.get(i).getStock().equals(order.getTicker())) {
 				portfolio.get(i).updateHolding(order);
 				holdingExists = true;
 			}
@@ -20,6 +29,8 @@ public class Portfolio {
 		if (holdingExists == false) {
 			portfolio.add(new Holding(order));
 		}
+		
+		eliminateShellOrders();
 	}
 	
 	public ArrayList<Holding> getPortfolio() {
