@@ -4,20 +4,23 @@ public class Order {
 	private String ticker;
 	private int quantity;
 	private double price; 
+	private double orderAmount;
 	
 	public Order(String orderType, String ticker, String quantity, String price) {
 		this.orderType = orderType;
 		this.ticker = ticker;
-		this.quantity = Integer.parseInt(quantity);
+		
+		if (orderType.equals("BUY")) {
+			this.quantity = Integer.parseInt(quantity);
+		} else {
+			this.quantity = Integer.parseInt(quantity) * -1;
+		}
 		this.price = Double.parseDouble(price);
+		this.orderAmount = (double)(this.quantity) * this.price;
 	}
 	
-	public boolean compareOrder(Order order) {
-		if (order.getTicker().equals(this.ticker)) {
-			return true;
-		} else {
-			return false;
-		}
+	public double getorderAmount() {
+		return orderAmount;
 	}
 
 	public String getOrderType() {

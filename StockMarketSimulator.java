@@ -43,6 +43,7 @@ public class StockMarketSimulator {
     private BufferedReader input;
     private ConnectionTerminator connectionTerminator;
     private boolean authenticated; 
+    private Portfolio portfolio;
 
     //----------------------------------------------------------------------------
     public StockMarketSimulator() {
@@ -189,6 +190,21 @@ public class StockMarketSimulator {
     //----------------------------------------------------------------------------
     public String getServerMessage() throws Exception {
         return input.readLine();
+    }
+
+    //----------------------------------------------------------------------------
+    public Portfolio buildPortfolio(String inputString) {
+        if (inputString.length() > 0) {
+            ArrayList<Holding> returnPortfolio = new ArrayList<Holding>();
+            String[] portfolioComponents = inputString.split(":");
+            for (int i = 0; i < portfolioComponents.length; i++) {
+                String[] holdingComponents = portfolioComponents[i].split("/");
+                returnPortfolio.add(new Holding(holdingComponents[0], holdingComponents[1], holdingComponents[2], holdingComponents[3]));
+            }
+            return new Portfolio(returnPortfolio);
+        } else {
+            return new Portfolio(new ArrayList<Holding>());
+        }
     }
     //----------------------------------------------------------------------------
     public class MenuMouseListener implements MouseListener {
@@ -424,6 +440,7 @@ public class StockMarketSimulator {
             tradeUI.add(chart);
         } else if (buttonFunction.equalsIgnoreCase(Const.LOGIN)) {
             String loginStatus = "";
+            String portfolioInput = "";
             String username = usernameField.getText();
             String password = passwordField.getText();
             String userInformation = username + "/" + password;
@@ -438,6 +455,16 @@ public class StockMarketSimulator {
             if (loginStatus.equalsIgnoreCase("Authenticated!")) {
                 authenticated = true;
             }
+
+            try {
+                portfolioInput = input.readLine();
+            } catch (IOException e) {
+                System.out.println("Error!");
+            }
+            portfolio = buildPortfolio(portfolioInput);
+            System.out.println(portfolio.deconstruct());
+            
+
             state = Const.PORTFOLIO;
             window.setContentPane(portfolioUI);
             portfolioUI.requestFocus();
