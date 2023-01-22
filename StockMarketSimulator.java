@@ -48,7 +48,7 @@ public class StockMarketSimulator {
     public StockMarketSimulator() {
         //Network Initialization
         LOCAL_HOST = "127.0.0.1";
-        PORT = 5001;
+        PORT = 5000;
         authenticated = false;
         //  Window Initialization
         window = new JFrame("Stock Simulator");
@@ -123,7 +123,7 @@ public class StockMarketSimulator {
         //  Action Field
         String[] actions = {"BUY", "SELL"};
         actionField = new JComboBox(actions);
-        actionField.setBounds(50, 250, 200, 300);
+        actionField.setBounds(50, 385, 200, 50);
         actionField.setForeground(Const.PRIMARYBLACK);
         tradeUI.add(actionField);
         //  Quantity Field
