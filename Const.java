@@ -20,6 +20,7 @@ public class Const {
     //  Other Buttons
     public static final String SEARCH = "SEARCH";
     public static final String LOGIN = "LOG IN";
+    public static final String SUBMIT = "SUBMIT";
 
     //  Fonts
     private static final Font MYRIAD = CustomFont.loadFont("Fonts/Myriad Pro Semibold.ttf", 10);

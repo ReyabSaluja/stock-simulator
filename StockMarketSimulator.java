@@ -410,7 +410,6 @@ public class StockMarketSimulator {
             ((Button) aboutItems[6]).setTextColor(Const.LIGHTBLUE);
         } else if (buttonFunction.equalsIgnoreCase(Const.SEARCH)) {
             search = searchField.getText().toUpperCase();
-            System.out.println(search);
             //  Graph Initialization
             Stock newStock = new Stock(search);
             if (chart == null) {
@@ -442,6 +441,18 @@ public class StockMarketSimulator {
             state = Const.PORTFOLIO;
             window.setContentPane(portfolioUI);
             portfolioUI.requestFocus();
+        } else if (buttonFunction.equalsIgnoreCase(Const.SUBMIT)) {
+
+            String ticker = searchField.getText();
+            String quantity = quantityField.getText();
+            String orderType = actionField.getSelectedItem().toString();
+            Stock submitStock = new Stock(ticker);
+            ArrayList<Double> submitStockPrices = submitStock.getClosingPrices();
+            String submitStockPrice = submitStockPrices.get(submitStockPrices.size() - 1).toString();
+            String orderInformation = orderType + "/" + ticker + "/" + quantity + "/" + submitStockPrice;
+            output.println(orderInformation);
+            output.flush();
+           
         }
     }
     //----------------------------------------------------------------------------
@@ -477,7 +488,8 @@ public class StockMarketSimulator {
         new Button(new Rect(555, 305, Const.WHITE, 100, 50), new Text(600, 100, Const.SEARCH, Const.MYRIAD_S, Const.PRIMARYBLACK, true), MouseEvent.MOUSE_CLICKED, Const.SEARCH, Const.LIGHTBLUE, true, true),
         new Image(555, 280, Const.SEARCH_ICON_IMAGE),
         new Text(50, 355, "Action", Const.OPENSANS_XXS, Const.DARKGREY, true),
-        new Text(50, 445, "Quantity", Const.OPENSANS_XXS, Const.DARKGREY, true)
+        new Text(50, 445, "Quantity", Const.OPENSANS_XXS, Const.DARKGREY, true),
+        new Button(new Rect(50, 580, Const.DARKBLUE, 130, 50), new Text(80, 160, Const.SUBMIT, Const.OPENSANS_BOLD_S, Const.WHITE, true), MouseEvent.MOUSE_CLICKED, Const.SUBMIT, Const.LIGHTBLUE, false, true)
     };
 
     GraphicalUserInterfaceItem[] creatorsItems = {
