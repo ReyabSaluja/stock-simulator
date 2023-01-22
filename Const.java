@@ -41,6 +41,7 @@ public class Const {
     public static final Font OPENSANS_XL = OPENSANS.deriveFont(60f);
 
     private static final Font OPENSANSBOLD = CustomFont.loadFont("Fonts/OpenSans-Semibold.ttf", 10);
+    public static final Font OPENSANS_BOLD_XS = OPENSANSBOLD.deriveFont(12f);
     public static final Font OPENSANS_BOLD_S = OPENSANSBOLD.deriveFont(25f);
     public static final Font OPENSANS_BOLD_M = OPENSANSBOLD.deriveFont(35f);
     public static final Font OPENSANS_BOLD_L = OPENSANSBOLD.deriveFont(50f);
