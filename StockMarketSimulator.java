@@ -26,7 +26,7 @@ public class StockMarketSimulator {
     private JTextField searchField;
     private String search;
     private LineChart chart;
-    private JComboBox actionField;
+    private JComboBox <String> actionField;
     private JTextField quantityField;
 
     private GraphicalUserInterface loginUI, portfolioUI, tradeUI, creatorsUI, aboutUI;
@@ -126,7 +126,7 @@ public class StockMarketSimulator {
             "BUY",
             "SELL"
         };
-        actionField = new JComboBox(actions);
+        actionField = new JComboBox <String> (actions);
         actionField.setBounds(50, 385, 200, 50);
         actionField.setForeground(Const.PRIMARYBLACK);
         tradeUI.add(actionField);

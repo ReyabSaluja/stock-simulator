@@ -1,13 +1,28 @@
+/**
+ *  The Portfolio class is an object that represents the user's portfolio
+ * 
+ *  Their portfolio consists of all of their holdings, thus the ArrayList of holdings that defines it
+ * 
+ *  @author     Shawn Chen
+ * 	@see		Holding.java
+ *  @version    01/22/2023
+ */
+
 import java.util.ArrayList;
 
 public class Portfolio {
-
     private ArrayList < Holding > portfolio;
+    //----------------------------------------------------------------------------
     public Portfolio(ArrayList < Holding > portfolio) {
         this.portfolio = portfolio;
     }
+    //----------------------------------------------------------------------------
+	/**
+	 *	Eliminate holdings from the portfolio if they have zero quantity
 
-    //If a holding has a 0 quantity, then it will be removed from the portfolio
+	 *	It goes through each order in the portfolio and checks if the quantity of the order 
+	 *	is zero, if so it removes the order from the portfolio.
+	 */
     public void eliminateShellOrders() {
         for (int i = 0; i < portfolio.size(); i++) {
             if (portfolio.get(i).getQuantity() == 0) {
@@ -16,6 +31,19 @@ public class Portfolio {
         }
     }
 
+	/**
+	 * 	The method updatePortfolio is used to update the user's portfolio with the given order.
+	 * 
+	 *	It first checks if the order corresponds to an existing holding in the portfolio. 
+	 *	If so, it updates the holding with the order details.
+	 *
+	 *	If no existing holding is found for the order, it creates 
+	 *	a new holding for the order and adds it to the portfolio.
+	 *
+	 *	Finally, it eliminates any holding with zero quantity in the portfolio by calling the eliminateShellOrders method.
+	 * 
+	 * 	@param order	the order to update the portfolio with
+	 */
     public void updatePortfolio(Order order) {
 
         boolean holdingExists = false;
@@ -47,7 +75,7 @@ public class Portfolio {
             }
         }
     }
-
+	
     public String deconstruct() {
         if (portfolio.size() > 0) {
             String returnStr = "";
@@ -61,5 +89,4 @@ public class Portfolio {
             return "";
         }
     }
-
 }
