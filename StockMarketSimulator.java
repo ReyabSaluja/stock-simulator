@@ -1,7 +1,7 @@
 import java.util.ArrayList;
 
 import java.net.Socket;
-
+import java.text.DecimalFormat;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -9,6 +9,7 @@ import java.io.PrintWriter;
 
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
+import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.border.LineBorder;
 
@@ -36,6 +37,8 @@ public class StockMarketSimulator {
     private boolean authenticated;
     //  Portfolio Components
     private Portfolio portfolio;
+    private JTextField accountValueDisplay;
+    private JTextArea holdings;
     //  Trade Display Components
     private JTextField searchField;
     private String search;
@@ -43,6 +46,10 @@ public class StockMarketSimulator {
     private JComboBox <String> actionField;
     private String[] actions;
     private JTextField quantityField;
+    //  About Display Components
+    private JTextArea about;
+    //  Creators Display Components
+    private JTextArea creators;
     //  User Save Components
     private String userInformation;
     private PrintWriter output;
@@ -53,7 +60,7 @@ public class StockMarketSimulator {
     private Socket clientSocket;
     private ConnectionTerminator connectionTerminator;
     //  User Components
-    private int accountValue;
+    private double accountValue;
     //----------------------------------------------------------------------------
     public StockMarketSimulator() {
         //  Network Initialization
@@ -61,7 +68,7 @@ public class StockMarketSimulator {
         PORT = 5001;
         authenticated = false;
         //  Account Initialization
-        accountValue = 100000;
+        accountValue = 0;
         //  Window Initialization
         window = new JFrame("Stock Simulator");
         window.setSize(Const.WIDTH, Const.HEIGHT);
@@ -156,6 +163,39 @@ public class StockMarketSimulator {
         quantityField.setForeground(Const.LIGHTGREY);
         quantityField.setBorder(new LineBorder(Const.LIGHTBLUE, 3, true));
         tradeUI.add(quantityField);
+        //  Holding Field
+        portfolioUI.setLayout(null);
+        holdings = new JTextArea();
+        holdings.setEditable(false);
+        holdings.setBackground(Const.DARKBLUE);
+        holdings.setBounds(80, 500, Const.WIDTH - 200, 200);
+        holdings.setFont(Const.OPENSANS_BOLD_S);
+        holdings.setForeground(Const.WHITE);
+        portfolioUI.add(holdings);
+        //  Account Value Field
+        accountValueDisplay = new JTextField();
+        accountValueDisplay.setEditable(false);
+        accountValueDisplay.setBackground(Const.DARKBLUE);
+        accountValueDisplay.setBounds(70, 325, 175, 75);
+        accountValueDisplay.setFont(Const.OPENSANS_BOLD_M);
+        accountValueDisplay.setForeground(Const.WHITE);
+        portfolioUI.add(accountValueDisplay);
+        //  About Display
+        aboutUI.setLayout(null);
+        about = new JTextArea();
+        about.setEditable(false);
+        about.setBounds(220, 325, Const.WIDTH - 200, 700);
+        about.setFont(Const.OPENSANS_BOLD_S);
+        about.setForeground(Const.PRIMARYBLACK);
+        aboutUI.add(about);
+        //  Creators Display
+        creatorsUI.setLayout(null);
+        creators = new JTextArea();
+        creators.setEditable(false);
+        creators.setBounds(250, 325, Const.WIDTH - 200, 700);
+        creators.setFont(Const.OPENSANS_BOLD_S);
+        creators.setForeground(Const.PRIMARYBLACK);
+        creatorsUI.add(creators);
         //  Connection
         connectionTerminator = new ConnectionTerminator();
         window.addWindowListener(connectionTerminator);
@@ -205,6 +245,16 @@ public class StockMarketSimulator {
         } else {
             return new Portfolio(new ArrayList < Holding > ());
         }
+    }
+
+    public void synchronizeAccountValue() {
+        accountValue = 0;
+        String displayString = "";
+        for (int i = 0; i < portfolio.getPortfolio().size(); i++) {
+            accountValue += portfolio.getPortfolio().get(i).getHoldingAmount();
+        }
+
+        accountValueDisplay.setText("$" + Double.toString(accountValue));
     }
     //----------------------------------------------------------------------------
     public class MenuMouseListener implements MouseListener {
@@ -409,7 +459,7 @@ public class StockMarketSimulator {
             state = Const.PORTFOLIO;
             window.setContentPane(portfolioUI);
             portfolioUI.requestFocus();
-            ((Button) portfolioItems[3]).setTextColor(Const.LIGHTBLUE); //  Keeping current state menu option colored when currently on it
+            ((Button) portfolioItems[3]).setTextColor(Const.LIGHTBLUE); //  Keeping current state menu option colored when currently on it            
         } else if (buttonFunction.equalsIgnoreCase(Const.TRADE) && authenticated) {
             state = Const.TRADE;
             tradeUI.requestFocus();
@@ -417,11 +467,15 @@ public class StockMarketSimulator {
             searchField.requestFocusInWindow();
             ((Button) tradeItems[4]).setTextColor(Const.LIGHTBLUE);
         } else if (buttonFunction.equalsIgnoreCase(Const.CREATORS) && authenticated) {
+            creators.setText("This Stock Simulator was made entirely by Reyab Saluja & Shawn Chen \n It was developed for our ICS4UE final project and we're very proud of it :)");
+
             state = Const.CREATORS;
             window.setContentPane(creatorsUI);
             creatorsUI.requestFocus();
             ((Button) creatorsItems[5]).setTextColor(Const.LIGHTBLUE);
         } else if (buttonFunction.equalsIgnoreCase(Const.ABOUT) && authenticated) {
+            about.setText("\n This is a real-time stock simulator integrated with dynamic charts, developed fully in Java. \n When placing an order, it will be added to the stock holding into your portfolio \n ");
+
             state = Const.ABOUT;
             window.setContentPane(aboutUI);
             aboutUI.requestFocus();
@@ -437,7 +491,6 @@ public class StockMarketSimulator {
             }
             chart.setPreferredSize(new Dimension(600, 400));
             chart.setBounds(Const.WIDTH - 600 - 50, 280, 600, 400);
-            // System.out.println(newStock.getTicker() + newStock.getPrice() + newStock.getChange() + newStock.getChangePercentage());
             //  Adding Chart to Trade UI
             tradeUI.add(chart);
         } else if (buttonFunction.equalsIgnoreCase(Const.LOGIN)) {
@@ -463,8 +516,24 @@ public class StockMarketSimulator {
             } catch (IOException e) {
                 System.out.println("Error!");
             }
+
             portfolio = buildPortfolio(portfolioInput);
             portfolio.deconstructPrint();
+
+            if (portfolio != null) {
+                String toDisplay = "";
+                String toDisplayString = "";
+                for (int i = 0; i < portfolio.getPortfolio().size(); i++) {
+                    Holding stockPosition = portfolio.getPortfolio().get(i);
+                    toDisplay = "Stock Ticker: " + stockPosition.getStock() + " Stock Holding Position: " + stockPosition.getHoldingType() + " Stock Quantity: " + stockPosition.getQuantity() + " Stock Holding Amount ($)" + stockPosition.getHoldingAmount() + "\n";  
+                    toDisplayString += toDisplay;
+                }
+
+                holdings.setText(toDisplayString);
+            }
+
+            synchronizeAccountValue();
+
             state = Const.PORTFOLIO;
             window.setContentPane(portfolioUI);
             portfolioUI.requestFocus();
@@ -486,6 +555,7 @@ public class StockMarketSimulator {
                 System.out.println("Error!");
             }
             portfolio = buildPortfolio(updatedPortfolio);
+            synchronizeAccountValue();
             System.out.println(portfolio.deconstruct());
 
         }
@@ -510,11 +580,9 @@ public class StockMarketSimulator {
         new Button(new Rect(350, 100, Const.DARKBLUE, 100, 50), new Text(400, 100, Const.CREATORS, Const.OPENSANS_BOLD_S, Const.WHITE, true), MouseEvent.MOUSE_CLICKED, Const.CREATORS, Const.LIGHTBLUE, true, true),
         new Button(new Rect(525, 100, Const.DARKBLUE, 100, 50), new Text(600, 100, Const.ABOUT, Const.OPENSANS_BOLD_S, Const.WHITE, true), MouseEvent.MOUSE_CLICKED, Const.ABOUT, Const.LIGHTBLUE, true, true),
         new Rect(50, 275, Const.DARKBLUE, 400, 150),
-        new Text(70, 315, "ACCOUNT VALUE", Const.OPENSANS_BOLD_XS, Const.WHITE, true),
-        new Text(70, 325, "$" + Integer.toString(accountValue), Const.OPENSANS_BOLD_M, Const.WHITE, true),
+        new Text(70, 305, "ACCOUNT VALUE", Const.OPENSANS_BOLD_XS, Const.WHITE, true),
         new Rect(50, 450, Const.DARKBLUE, Const.WIDTH - 100, 300),
-        new Text(80, 470, "Symbol", Const.OPENSANS_BOLD_XS, Const.WHITE, true),
-        new DisplayHolding()
+        new Text(80, 470, "Symbol", Const.OPENSANS_BOLD_XS, Const.WHITE, true)
     };
 
     DisplayItem[] tradeItems = {
