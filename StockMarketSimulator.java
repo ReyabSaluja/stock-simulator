@@ -58,7 +58,7 @@ public class StockMarketSimulator {
         //  Network Initialization
         LOCAL_HOST = "127.0.0.1";
         PORT = 5001;
-        authenticated = true;
+        authenticated = false;
         //  Account Initialization
         accountValue = 100000;
         //  Window Initialization
@@ -159,7 +159,7 @@ public class StockMarketSimulator {
         connectionTerminator = new ConnectionTerminator();
         window.addWindowListener(connectionTerminator);
         //  Window
-        window.setContentPane(portfolioUI);
+        window.setContentPane(loginUI);
         window.setVisible(true);
     }
     //----------------------------------------------------------------------------
