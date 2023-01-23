@@ -1,3 +1,5 @@
+import java.util.ArrayList;
+
 /**
  *  The Holding class is an object that represents a stock holding
  * 
@@ -14,6 +16,7 @@ public class Holding {
     private int quantity;
     private double price;
     private double holdingAmount;
+    
     //----------------------------------------------------------------------------
     public Holding(String holdingType, String stock, String quantity, String price) {
         this.holdingType = holdingType;
@@ -57,6 +60,15 @@ public class Holding {
     public void updateHolding(Order order) {
         this.quantity = this.quantity + order.getQuantity();
         this.holdingAmount = this.holdingAmount + order.getorderAmount();
+    }
+
+    public ArrayList<String> displayPosition() {
+        ArrayList<String> components = new ArrayList<String>();
+        components.add(holdingType);
+        components.add(stock);
+        components.add(Integer.toString(quantity));
+        components.add(Double.toString(holdingAmount));
+        return components;
     }
     //----------------------------------------------------------------------------
     //  Getter and Setters

@@ -12,6 +12,7 @@ import javax.swing.JFrame;
 import javax.swing.JTextField;
 import javax.swing.border.LineBorder;
 
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
@@ -513,7 +514,7 @@ public class StockMarketSimulator {
         new Text(70, 325, "$" + Integer.toString(accountValue), Const.OPENSANS_BOLD_M, Const.WHITE, true),
         new Rect(50, 450, Const.DARKBLUE, Const.WIDTH - 100, 300),
         new Text(80, 470, "Symbol", Const.OPENSANS_BOLD_XS, Const.WHITE, true),
-        new Text(80, 470, "Symbol", Const.OPENSANS_BOLD_XS, Const.WHITE, true),
+        new DisplayHolding()
     };
 
     DisplayItem[] tradeItems = {
