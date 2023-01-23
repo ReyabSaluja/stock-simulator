@@ -1,14 +1,17 @@
+import java.util.ArrayList;
+
+import java.net.Socket;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
-import java.net.Socket;
-import java.util.ArrayList;
 
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JTextField;
 import javax.swing.border.LineBorder;
+
 import java.awt.Dimension;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
@@ -19,39 +22,43 @@ import java.awt.event.WindowListener;
 import java.awt.event.WindowEvent;
 
 public class StockMarketSimulator {
-
+    //  General Display Components
+    private JFrame window;
+    private MenuMouseListener mouseListener;
+    private MenuMotionListener mouseMotionListener;
+    private Display loginUI, portfolioUI, tradeUI, creatorsUI, aboutUI;
+    //  State
+    private String state = Const.START;
+    //  Login Display Components
     private JTextField usernameField;
     private JTextField passwordField;
-    private String userInformation;
+    private boolean authenticated;
+    //  Portfolio Components
+    private Portfolio portfolio;
+    //  Trade Display Components
     private JTextField searchField;
     private String search;
     private LineChart chart;
     private JComboBox <String> actionField;
+    private String[] actions;
     private JTextField quantityField;
-
-    private GraphicalUserInterface loginUI, portfolioUI, tradeUI, creatorsUI, aboutUI;
-    private JFrame window;
-    private MenuMouseListener mouseListener;
-    private MenuMotionListener mouseMotionListener;
-
-    private String state = Const.START;
-
+    //  User Save Components
+    private String userInformation;
+    private PrintWriter output;
+    private BufferedReader input;
+    //  Connection Components
     private final String LOCAL_HOST;
     private final int PORT;
     private Socket clientSocket;
-    private PrintWriter output;
-    private BufferedReader input;
     private ConnectionTerminator connectionTerminator;
-    private boolean authenticated;
-    private Portfolio portfolio;
+    //  User Components
     private int accountValue;
-
     //----------------------------------------------------------------------------
     public StockMarketSimulator() {
         //  Network Initialization
         LOCAL_HOST = "127.0.0.1";
         PORT = 5001;
-        authenticated = false;
+        authenticated = true;
         //  Account Initialization
         accountValue = 100000;
         //  Window Initialization
@@ -66,11 +73,11 @@ public class StockMarketSimulator {
         window.addMouseListener(mouseListener);
         window.addMouseMotionListener(mouseMotionListener);
         //  Panels Initialization
-        loginUI = new GraphicalUserInterface(0, 0, Const.WIDTH, Const.HEIGHT, Const.WHITE, startItems);
-        portfolioUI = new GraphicalUserInterface(0, 0, Const.WIDTH, Const.HEIGHT, Const.WHITE, portfolioItems);
-        tradeUI = new GraphicalUserInterface(0, 0, Const.WIDTH, Const.HEIGHT, Const.WHITE, tradeItems);
-        creatorsUI = new GraphicalUserInterface(0, 0, Const.WIDTH, Const.HEIGHT, Const.WHITE, creatorsItems);
-        aboutUI = new GraphicalUserInterface(0, 0, Const.WIDTH, Const.HEIGHT, Const.WHITE, aboutItems);
+        loginUI = new Display(0, 0, Const.WIDTH, Const.HEIGHT, Const.WHITE, startItems);
+        portfolioUI = new Display(0, 0, Const.WIDTH, Const.HEIGHT, Const.WHITE, portfolioItems);
+        tradeUI = new Display(0, 0, Const.WIDTH, Const.HEIGHT, Const.WHITE, tradeItems);
+        creatorsUI = new Display(0, 0, Const.WIDTH, Const.HEIGHT, Const.WHITE, creatorsItems);
+        aboutUI = new Display(0, 0, Const.WIDTH, Const.HEIGHT, Const.WHITE, aboutItems);
         //  Search Field Initialization
         searchField = new JTextField("", 15);
         searchField.addFocusListener(new FocusListener() {
@@ -88,7 +95,7 @@ public class StockMarketSimulator {
         searchField.setForeground(Const.LIGHTGREY);
         searchField.setBorder(new LineBorder(Const.LIGHTBLUE, 3, true));
         tradeUI.add(searchField);
-
+        //  Username Field Initialization
         userInformation = "";
         usernameField = new JTextField("", 15);
         usernameField.addFocusListener(new FocusListener() {
@@ -100,6 +107,7 @@ public class StockMarketSimulator {
             @Override
             public void focusLost(FocusEvent e) {}
         });
+        //  Password Field Initialization
         passwordField = new JTextField("", 15);
         passwordField.addFocusListener(new FocusListener() {
             @Override
@@ -111,22 +119,23 @@ public class StockMarketSimulator {
             public void focusLost(FocusEvent e) {}
         });
         loginUI.setLayout(null);
-        //  Username Field
+        //  Username Field Placement
         usernameField.setBounds(Const.WIDTH / 2 - 250, 250, 500, 70);
         usernameField.setForeground(Const.LIGHTGREY);
         usernameField.setBorder(new LineBorder(Const.LIGHTBLUE, 3, true));
         loginUI.add(usernameField);
-        //  Password Field
+        //  Password Field Placement
         passwordField.setBounds(Const.WIDTH / 2 - 250, 350, 500, 70);
         passwordField.setForeground(Const.LIGHTGREY);
         passwordField.setBorder(new LineBorder(Const.LIGHTBLUE, 3, true));
         loginUI.add(passwordField);
-        //  Action Field
-        String[] actions = {
+        //  Action Field Initialization
+        actions = new String[] {
             "BUY",
             "SELL"
         };
         actionField = new JComboBox <String> (actions);
+        //  Action Field Placement
         actionField.setBounds(50, 385, 200, 50);
         actionField.setForeground(Const.PRIMARYBLACK);
         tradeUI.add(actionField);
@@ -141,15 +150,16 @@ public class StockMarketSimulator {
             @Override
             public void focusLost(FocusEvent e) {}
         });
+        //  Quantity Field Placement
         quantityField.setBounds(50, 475, 500, 70);
         quantityField.setForeground(Const.LIGHTGREY);
         quantityField.setBorder(new LineBorder(Const.LIGHTBLUE, 3, true));
         tradeUI.add(quantityField);
-
+        //  Connection
         connectionTerminator = new ConnectionTerminator();
         window.addWindowListener(connectionTerminator);
         //  Window
-        window.setContentPane(loginUI);
+        window.setContentPane(portfolioUI);
         window.setVisible(true);
     }
     //----------------------------------------------------------------------------
@@ -180,15 +190,6 @@ public class StockMarketSimulator {
         output.close();
         input.close();
         System.out.println("CONNECTION CLOSED-------------------------------");
-    }
-    //----------------------------------------------------------------------------
-    public void sendServerMessage(String message) {
-        output.println(message);
-        output.flush();
-    }
-    //----------------------------------------------------------------------------
-    public String getServerMessage() throws Exception {
-        return input.readLine();
     }
     //----------------------------------------------------------------------------
     public Portfolio buildPortfolio(String inputString) {
@@ -396,14 +397,18 @@ public class StockMarketSimulator {
      */
     public void runButtonFunction(String buttonFunction) {
         if (buttonFunction.equalsIgnoreCase(Const.START)) {
-            state = Const.START;
+            /*
+             *  Setting state and current display panel
+             *  based on what button was ran
+             */
+            state = Const.START;                        
             window.setContentPane(loginUI);
             loginUI.requestFocus();
         } else if (buttonFunction.equalsIgnoreCase(Const.PORTFOLIO) && authenticated) {
             state = Const.PORTFOLIO;
             window.setContentPane(portfolioUI);
             portfolioUI.requestFocus();
-            ((Button) portfolioItems[3]).setTextColor(Const.LIGHTBLUE);
+            ((Button) portfolioItems[3]).setTextColor(Const.LIGHTBLUE); //  Keeping current state menu option colored when currently on it
         } else if (buttonFunction.equalsIgnoreCase(Const.TRADE) && authenticated) {
             state = Const.TRADE;
             tradeUI.requestFocus();
@@ -458,9 +463,7 @@ public class StockMarketSimulator {
                 System.out.println("Error!");
             }
             portfolio = buildPortfolio(portfolioInput);
-            // System.out.println(portfolio.deconstruct());
-            portfolio.printPortfolio();
-
+            portfolio.deconstructPrint();
             state = Const.PORTFOLIO;
             window.setContentPane(portfolioUI);
             portfolioUI.requestFocus();
@@ -476,7 +479,6 @@ public class StockMarketSimulator {
             output.println(orderInformation);
             System.out.println("Sent!");
             output.flush();
-
             try {
                 updatedPortfolio = input.readLine();
             } catch (IOException e) {
@@ -489,7 +491,7 @@ public class StockMarketSimulator {
     }
     //----------------------------------------------------------------------------
     //  Graphical User Interfaces
-    GraphicalUserInterfaceItem[] startItems = {
+    DisplayItem[] startItems = {
         //  Login button BELOW the text fields
         new Text(570, 130, "Stock", Const.OPENSANS_BOLD_M, Const.PRIMARYBLACK, true),
         new Text(665, 130, "Simulator", Const.OPENSANS_BOLD_M, Const.DARKBLUE, true),
@@ -498,7 +500,7 @@ public class StockMarketSimulator {
         new Text(Const.WIDTH / 2 - 250, 200, "Log In", Const.OPENSANS_S, Const.PRIMARYBLACK, true)
     };
 
-    GraphicalUserInterfaceItem[] portfolioItems = {
+    DisplayItem[] portfolioItems = {
         new Image(0, 0, Const.GUI_START_IMAGE),
         new Text(50, 15, "Stock", Const.OPENSANS_BOLD_L, Const.WHITE, true),
         new Text(185, 15, "Simulator", Const.OPENSANS_BOLD_L, Const.LIGHTBLUE, true),
@@ -510,9 +512,11 @@ public class StockMarketSimulator {
         new Text(70, 315, "ACCOUNT VALUE", Const.OPENSANS_BOLD_XS, Const.WHITE, true),
         new Text(70, 325, "$" + Integer.toString(accountValue), Const.OPENSANS_BOLD_M, Const.WHITE, true),
         new Rect(50, 450, Const.DARKBLUE, Const.WIDTH - 100, 300),
+        new Text(80, 470, "Symbol", Const.OPENSANS_BOLD_XS, Const.WHITE, true),
+        new Text(80, 470, "Symbol", Const.OPENSANS_BOLD_XS, Const.WHITE, true),
     };
 
-    GraphicalUserInterfaceItem[] tradeItems = {
+    DisplayItem[] tradeItems = {
         new Image(0, 0, Const.GUI_START_IMAGE),
         new Text(50, 15, "Stock", Const.OPENSANS_BOLD_L, Const.WHITE, true),
         new Text(185, 15, "Simulator", Const.OPENSANS_BOLD_L, Const.LIGHTBLUE, true),
@@ -528,7 +532,7 @@ public class StockMarketSimulator {
         new Button(new Rect(50, 580, Const.DARKBLUE, 130, 50), new Text(80, 160, Const.SUBMIT, Const.OPENSANS_BOLD_S, Const.WHITE, true), MouseEvent.MOUSE_CLICKED, Const.SUBMIT, Const.LIGHTBLUE, false, true)
     };
 
-    GraphicalUserInterfaceItem[] creatorsItems = {
+    DisplayItem[] creatorsItems = {
         new Image(0, 0, Const.GUI_START_IMAGE),
         new Text(50, 15, "Stock", Const.OPENSANS_BOLD_L, Const.WHITE, true),
         new Text(185, 15, "Simulator", Const.OPENSANS_BOLD_L, Const.LIGHTBLUE, true),
@@ -538,7 +542,7 @@ public class StockMarketSimulator {
         new Button(new Rect(525, 100, Const.DARKBLUE, 100, 50), new Text(600, 100, Const.ABOUT, Const.OPENSANS_BOLD_S, Const.WHITE, true), MouseEvent.MOUSE_CLICKED, Const.ABOUT, Const.LIGHTBLUE, true, true)
     };
 
-    GraphicalUserInterfaceItem[] aboutItems = {
+    DisplayItem[] aboutItems = {
         new Image(0, 0, Const.GUI_START_IMAGE),
         new Text(50, 15, "Stock", Const.OPENSANS_BOLD_L, Const.WHITE, true),
         new Text(185, 15, "Simulator", Const.OPENSANS_BOLD_L, Const.LIGHTBLUE, true),

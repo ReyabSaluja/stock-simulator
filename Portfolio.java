@@ -17,9 +17,14 @@ public class Portfolio {
         this.portfolio = portfolio;
     }
     //----------------------------------------------------------------------------
+    //  Getters and Setters
+    public ArrayList < Holding > getPortfolio() {
+        return this.portfolio;
+    }
+    //----------------------------------------------------------------------------
 	/**
 	 *	Eliminate holdings from the portfolio if they have zero quantity
-
+     *
 	 *	It goes through each order in the portfolio and checks if the quantity of the order 
 	 *	is zero, if so it removes the order from the portfolio.
 	 */
@@ -61,11 +66,12 @@ public class Portfolio {
         eliminateShellOrders();
     }
 
-    public ArrayList < Holding > getPortfolio() {
-        return this.portfolio;
-    }
-
-    public void printPortfolio() {
+    /**
+     *  Deconustrict print provides the user's stock transactions in an orderly manner
+     *  
+     *  On every new line, a new holding is shown which makes it very easy for debugging, etc.
+     */
+    public void deconstructPrint() {
         if (portfolio.size() > 0) {
             // String returnStr = "";
             for (int i = 0; i < portfolio.size(); i++) {
@@ -75,7 +81,12 @@ public class Portfolio {
             }
         }
     }
-	
+    
+    /**
+     *  Get's all of the user's holdings in a singular line seperated by semicolons
+     * 
+     *  @return  an ArrayList of all the user's current holdings
+     */
     public String deconstruct() {
         if (portfolio.size() > 0) {
             String returnStr = "";
@@ -89,4 +100,5 @@ public class Portfolio {
             return "";
         }
     }
+    //----------------------------------------------------------------------------
 }

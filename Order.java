@@ -1,11 +1,17 @@
+/**
+ * 	Order is a class for an object that represents a stock order
+ * 	
+ * 	This consists of an order type (buy/sell), the ticker (AAPL for example).
+ * 	the quantity, and the current price of the stock
+ */
+
 public class Order {
-	
 	private String orderType;
 	private String ticker;
 	private int quantity;
 	private double price; 
 	private double orderAmount;
-	
+    //----------------------------------------------------------------------------
 	public Order(String orderType, String ticker, String quantity, String price) {
 		this.orderType = orderType;
 		this.ticker = ticker;
@@ -18,7 +24,8 @@ public class Order {
 		this.price = Double.parseDouble(price);
 		this.orderAmount = (double)(this.quantity) * this.price;
 	}
-	
+    //----------------------------------------------------------------------------
+	//	Getters and Setters
 	public double getorderAmount() {
 		return orderAmount;
 	}
@@ -54,4 +61,5 @@ public class Order {
 	public void setPrice(double price) {
 		this.price = price;
 	}
+    //----------------------------------------------------------------------------
 }

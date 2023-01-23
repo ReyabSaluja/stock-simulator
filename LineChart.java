@@ -8,8 +8,12 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JPanel;
 import java.awt.Stroke;
-import java.awt.BasicStroke;
 
+/**
+ *  LineChart is a display for a chart that draws a visualization panel for a stock in the form of a chart
+ * 
+ *  @see Stock.java
+ */
 public class LineChart extends JPanel {
 
     private int pointWidth = 4;

@@ -4,21 +4,21 @@ import java.awt.Color;
 /**
  * The Menu class is the parent of every possible menu element.
  * 
- * @see Menu
- * @see Rext
- * @see Text
- * @see Image
- * @see Button
- * @author Reyab Saluja
+ * @see     Menu
+ * @see     Rext
+ * @see     Text
+ * @see     Image
+ * @see     Button
+ * @author  Reyab Saluja
  * @version "1.8.0_322"
  */
 
-public abstract class GraphicalUserInterfaceItem {
+public abstract class DisplayItem {
     private int x;
     private int y;
     private Color color;
     //------------------------------------------------------------------------------     
-    GraphicalUserInterfaceItem(int x, int y, Color color) {
+    DisplayItem(int x, int y, Color color) {
         this.x = x;
         this.y = y;
         this.color = color;
@@ -46,9 +46,9 @@ public abstract class GraphicalUserInterfaceItem {
     }
     //------------------------------------------------------------------------------ 
     /** 
-     * Every child of this class must implement their own custom draw Method.
+     *  Every child of this class must implement their own custom draw Method.
      * 
-     * @param g
+     *  @param g
      */
     public abstract void draw(Graphics g);
 }

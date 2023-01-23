@@ -7,16 +7,16 @@ import java.awt.FontFormatException;
  * CustomFont class to load font files and create fonts with set size.
  * Taken from Oracle Java Docs. https://docs.oracle.com/javase/tutorial/2d/text/fonts.html
  * 
- * @author Reyab Saluja
- * @version "1.8.0_322"
+ * @author  Reyab Saluja
+ * @version "01/18/2022"
  */
 
 public final class CustomFont {
     /**
      * Returns custom font with set size, otherwise, Arial font with set size.
-     * @param fontPath
-     * @param fontSize
-     * @return Font
+     * @param   fontPath
+     * @param   fontSize
+     * @return  Font
      */
     public static final Font loadFont(String fontPath, int fontSize) {
         try {

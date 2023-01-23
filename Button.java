@@ -5,14 +5,14 @@ import java.awt.Color;
  * The Button class is a template for making buttons. It works with the main program to add functionality. 
  * The Button class inherits from MenuItem. 
  * 
- * @see Rect
- * @see Text
- * @see GraphicalUserInterfaceItem
- * @author Reyab Saluja
+ * @see     Rect
+ * @see     Text
+ * @see     DisplayItem
+ * @author  Reyab Saluja
  * @version "1.8.0_322"
  */
 
-public class Button extends GraphicalUserInterfaceItem {
+public class Button extends DisplayItem {
     private Rect rect;
     private Text text;
     private int buttonEventType;
@@ -45,15 +45,52 @@ public class Button extends GraphicalUserInterfaceItem {
             this.text.setY(this.rect.getY());
         }
     }
-    //------------------------------------------------------------------------------  
+    //------------------------------------------------------------------------------ 
+    //  Getters and Setters
+    public Rect getRect() {
+        return this.rect;
+    }
+
+    public void setRect(Rect rect) {
+        this.rect = rect;
+    }
+
+    public Text getText() {
+        return this.text;
+    }
+
+    public int getButtonEventType() {
+        return this.buttonEventType;
+    }
+
+    public void setButtonEventType(int buttonEventType) {
+        this.buttonEventType = buttonEventType;
+    }
+    
     public String getButtonFunction() {
         return this.buttonFunction;
     }
-    //------------------------------------------------------------------------------  
-    public void resetColor() {
-        this.text.setColor(originalColor);
+
+    public void setButtonFunction(String buttonFunction) {
+        this.buttonFunction = buttonFunction;
     }
 
+    public Color getOriginalColor() {
+        return this.originalColor;
+    }
+
+    public void setOriginalColor(Color originalColor) {
+        this.originalColor = originalColor;
+    }
+
+    public Color getHoveredColor() {
+        return this.hoveredColor;
+    }
+
+    public void setHoveredColor(Color hoveredColor) {
+        this.hoveredColor = hoveredColor;
+    }
+    //------------------------------------------------------------------------------  
     public void setTextColor(Color newColor) {
         this.text.setColor(newColor);
     }
@@ -61,13 +98,20 @@ public class Button extends GraphicalUserInterfaceItem {
     public void setText(String newText) {
         this.text.setText(newText);
     }
-    //------------------------------------------------------------------------------  
+
     public void hoveredColor() {
         this.text.setColor(hoveredColor);
     }
+    //------------------------------------------------------------------------------  
+    /**
+     *  Resets button's text color
+     */
+    public void resetColor() {
+        this.text.setColor(originalColor);
+    }
 
     /** 
-     * Draws the button onto a Graphics panel.
+     *  Draws the button onto a Graphics panel.
      * 
      *  @param g
      */
@@ -77,7 +121,7 @@ public class Button extends GraphicalUserInterfaceItem {
     }
 
     /** 
-     * Centers the middle of the button to the passed coordinate.
+     *  Centers the middle of the button to the passed coordinate.
      * 
      *  @param x
      *  @param y
@@ -104,9 +148,9 @@ public class Button extends GraphicalUserInterfaceItem {
     }
 
     /** 
-     * Check if the passed mouseEvent type is the button's mouseEvent type. 
+     *  Check if the passed mouseEvent type is the button's mouseEvent type. 
      * 
-     *  @param mouseEventType
+     *  @param  mouseEventType
      *  @return boolean
      */
     public boolean checkButtonType(int mouseEventType) {

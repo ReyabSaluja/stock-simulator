@@ -8,14 +8,14 @@ import java.awt.geom.AffineTransform;
  * The Text class is a template for making text with custom fonts.
  * The Text class inherits from MenuItem.
  * 
- * @see GraphicalUserInterfaceItem
+ * @see DisplayItem
  * @see Image
  * @see CustomFont
  * @author Reyab Saluja
  * @version "1.8.0_322"
  */
 
-public class Text extends GraphicalUserInterfaceItem {
+public class Text extends DisplayItem {
     private String text;
     private Font font;
     private int width;

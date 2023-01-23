@@ -5,16 +5,22 @@ import java.util.ArrayList;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
-public class GraphicalUserInterface extends JPanel {
+/**
+ *  Display class is a list of display items to draw together in one panel
+ * 
+ *  @see DisplayItem
+ */
+
+public class Display extends JPanel {
     private int x;
     private int y;
     private int width;
     private int height;
     private Color backgroundColor;
 
-    private GraphicalUserInterfaceItem[] guiItems;
+    private DisplayItem[] guiItems;
     //----------------------------------------------------------------------------
-    GraphicalUserInterface() {
+    Display() {
         this.x = 0;
         this.y = 0;
         this.width = 0;
@@ -24,7 +30,7 @@ public class GraphicalUserInterface extends JPanel {
         this.setFocusable(true);
         this.requestFocusInWindow();
     }
-    GraphicalUserInterface(int x, int y, int width, int height, Color backgroundColor, GraphicalUserInterfaceItem[] guiItems) {
+    Display(int x, int y, int width, int height, Color backgroundColor, DisplayItem[] guiItems) {
         this.x = x;
         this.y = y;
         this.width = width;
@@ -68,7 +74,7 @@ public class GraphicalUserInterface extends JPanel {
         this.height = height;
     }
 
-    public GraphicalUserInterfaceItem getMenuItem(int index) {
+    public DisplayItem getMenuItem(int index) {
         return this.guiItems[index];
     }
 
@@ -82,6 +88,7 @@ public class GraphicalUserInterface extends JPanel {
     //----------------------------------------------------------------------------
     /** 
      *  Draws the menu onto a Graphics panel.
+     * 
      *  @param g
      */
     @Override
@@ -109,8 +116,8 @@ public class GraphicalUserInterface extends JPanel {
      *  Resets the color to the original of all the buttons 
      *  inside the menu except for an excluded button
      * 
-     *  @param excludedButtonIndex
-     *  @see resetButtons()
+     *  @param  excludedButtonIndex
+     *  @see    resetButtons()
      */
     public void resetButtonsExcept(int excludedButtonIndex) {
         for (int menuItemIndex = 0; menuItemIndex < excludedButtonIndex; menuItemIndex++) {
@@ -128,8 +135,9 @@ public class GraphicalUserInterface extends JPanel {
     //---------------------------------------------------------------------------- 
     /** 
      *  Find all the buttons inside the menu that collided with the passed coordinate.
-     *  @param x
-     *  @param y
+     * 
+     *  @param  x
+     *  @param  y
      *  @return ArrayList<Integer>
      */
     public ArrayList < Integer > findCollidedButtons(int x, int y) {
