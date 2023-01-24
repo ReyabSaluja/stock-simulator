@@ -64,7 +64,7 @@ public class StockMarketSimulator {
     public StockMarketSimulator() {
         //  Network Initialization
         LOCAL_HOST = "127.0.0.1";
-        PORT = 5000;
+        PORT = 5001;
         authenticated = false;
         //  Account Initialization
         accountValue = 0;
