@@ -22,7 +22,7 @@ public class Order {
 			this.quantity = Integer.parseInt(quantity) * -1;
 		}
 		this.price = Double.parseDouble(price);
-		this.orderAmount = (double)(this.quantity) * this.price;
+		this.orderAmount = Math.abs((double)(this.quantity) * this.price);
 	}
     //----------------------------------------------------------------------------
 	//	Getters and Setters

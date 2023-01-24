@@ -14,7 +14,7 @@ import java.io.IOException;
  */
 
 public class Server {
-    private final int PORT = 5001;
+    private final int PORT = 5000;
     private ServerSocket serverSocket;
     private Socket clientSocket;
     private PrintWriter output;

@@ -1,7 +1,6 @@
 import java.util.ArrayList;
 
 import java.net.Socket;
-import java.text.DecimalFormat;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -65,7 +64,7 @@ public class StockMarketSimulator {
     public StockMarketSimulator() {
         //  Network Initialization
         LOCAL_HOST = "127.0.0.1";
-        PORT = 5001;
+        PORT = 5000;
         authenticated = false;
         //  Account Initialization
         accountValue = 0;
@@ -249,12 +248,21 @@ public class StockMarketSimulator {
 
     public void synchronizeAccountValue() {
         accountValue = 0;
-        String displayString = "";
         for (int i = 0; i < portfolio.getPortfolio().size(); i++) {
             accountValue += portfolio.getPortfolio().get(i).getHoldingAmount();
         }
 
         accountValueDisplay.setText("$" + Double.toString(accountValue));
+
+        String toDisplay = "";
+        String toDisplayString = "";
+        for (int i = 0; i < portfolio.getPortfolio().size(); i++) {
+            Holding stockPosition = portfolio.getPortfolio().get(i);
+            toDisplay = "Stock Ticker: " + stockPosition.getStock() + " Stock Holding Position: " + stockPosition.getHoldingType() + " Stock Quantity: " + Math.abs(stockPosition.getQuantity()) + " Stock Holding Amount ($)" + Math.abs(stockPosition.getHoldingAmount()) + "\n";  
+            toDisplayString += toDisplay;
+        }
+
+        holdings.setText(toDisplayString);
     }
     //----------------------------------------------------------------------------
     public class MenuMouseListener implements MouseListener {
@@ -526,6 +534,7 @@ public class StockMarketSimulator {
                 for (int i = 0; i < portfolio.getPortfolio().size(); i++) {
                     Holding stockPosition = portfolio.getPortfolio().get(i);
                     toDisplay = "Stock Ticker: " + stockPosition.getStock() + " Stock Holding Position: " + stockPosition.getHoldingType() + " Stock Quantity: " + stockPosition.getQuantity() + " Stock Holding Amount ($)" + stockPosition.getHoldingAmount() + "\n";  
+
                     toDisplayString += toDisplay;
                 }
 

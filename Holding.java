@@ -27,7 +27,7 @@ public class Holding {
             this.quantity = Integer.parseInt(quantity) * -1;
         }
         this.price = Double.parseDouble(price);
-        this.holdingAmount = ((double)(this.quantity)) * this.price;
+        this.holdingAmount = Math.abs(((double)(this.quantity)) * this.price);
     }
 
     public Holding(Order initializeHolding) {
@@ -35,7 +35,7 @@ public class Holding {
         this.stock = initializeHolding.getTicker();
         this.quantity = initializeHolding.getQuantity();
         this.price = initializeHolding.getPrice();
-        this.holdingAmount = ((double)(this.quantity)) * this.price;
+        this.holdingAmount = Math.abs(((double)(this.quantity)) * this.price);
     }
     //----------------------------------------------------------------------------
     /**
