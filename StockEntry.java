@@ -1,3 +1,9 @@
+/**
+ *  StockEntry class is an individual entry of a stock
+ * 
+ *  @author     Reyab Saluja
+ *  @version    01/06/2022
+ */
 public class StockEntry {
     private String date;
     private String open;

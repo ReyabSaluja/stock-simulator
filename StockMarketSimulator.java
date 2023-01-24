@@ -22,6 +22,14 @@ import java.awt.event.FocusEvent;
 import java.awt.event.WindowListener;
 import java.awt.event.WindowEvent;
 
+/**
+ *  The StockMarketSimulator class is the client side of things
+ *  This is where visual information is displayed for the client such as stock graphs, etc.
+ * 
+ *  @author     Shawn Chen & Reyab Saluja
+ *  @version    01/23/2023
+ */
+
 public class StockMarketSimulator {
     //  General Display Components
     private JFrame window;
@@ -573,8 +581,8 @@ public class StockMarketSimulator {
     //  Graphical User Interfaces
     DisplayItem[] startItems = {
         //  Login button BELOW the text fields
-        new Text(570, 130, "Stock", Const.OPENSANS_BOLD_M, Const.PRIMARYBLACK, true),
-        new Text(665, 130, "Simulator", Const.OPENSANS_BOLD_M, Const.DARKBLUE, true),
+        new Text(Const.LOGIN_TITLE_PART1_X, Const.LOGIN_TITLE_Y, "Stock", Const.OPENSANS_BOLD_M, Const.PRIMARYBLACK, true),
+        new Text(Const.LOGIN_TITLE_PART2_X, Const.LOGIN_TITLE_Y, "Simulator", Const.OPENSANS_BOLD_M, Const.DARKBLUE, true),
         new Button(new Rect(630, 450, Const.DARKBLUE, 150, 50), new Text(60, 180, "", Const.OPENSANS_BOLD_S, Const.WHITE, true), MouseEvent.MOUSE_CLICKED, Const.LOGIN, Const.LIGHTBLUE, false, false),
         new Text(660, 450, "Sign In", Const.OPENSANS_BOLD_S, Const.WHITE, true),
         new Text(Const.WIDTH / 2 - 250, 200, "Log In", Const.OPENSANS_S, Const.PRIMARYBLACK, true)
@@ -584,10 +592,10 @@ public class StockMarketSimulator {
         new Image(0, 0, Const.GUI_START_IMAGE),
         new Text(50, 15, "Stock", Const.OPENSANS_BOLD_L, Const.WHITE, true),
         new Text(185, 15, "Simulator", Const.OPENSANS_BOLD_L, Const.LIGHTBLUE, true),
-        new Button(new Rect(50, 100, Const.DARKBLUE, 100, 50), new Text(50, 100, Const.PORTFOLIO, Const.OPENSANS_BOLD_S, Const.WHITE, true), MouseEvent.MOUSE_CLICKED, Const.PORTFOLIO, Const.LIGHTBLUE, true, true),
-        new Button(new Rect(225, 100, Const.DARKBLUE, 100, 50), new Text(250, 100, Const.TRADE, Const.OPENSANS_BOLD_S, Const.WHITE, true), MouseEvent.MOUSE_CLICKED, Const.TRADE, Const.LIGHTBLUE, true, true),
-        new Button(new Rect(350, 100, Const.DARKBLUE, 100, 50), new Text(400, 100, Const.CREATORS, Const.OPENSANS_BOLD_S, Const.WHITE, true), MouseEvent.MOUSE_CLICKED, Const.CREATORS, Const.LIGHTBLUE, true, true),
-        new Button(new Rect(525, 100, Const.DARKBLUE, 100, 50), new Text(600, 100, Const.ABOUT, Const.OPENSANS_BOLD_S, Const.WHITE, true), MouseEvent.MOUSE_CLICKED, Const.ABOUT, Const.LIGHTBLUE, true, true),
+        new Button(new Rect(Const.PORTFOLIO_BUTTON_X, Const.DISPLAY_BUTTONS_Y, Const.DARKBLUE, Const.DISPLAY_BUTTONS_WIDTH, Const.DISPLAY_BUTTONS_HEIGHT), new Text(Const.PORTFOLIO_BUTTON_X, Const.DISPLAY_BUTTONS_Y, Const.PORTFOLIO, Const.OPENSANS_BOLD_S, Const.WHITE, true), MouseEvent.MOUSE_CLICKED, Const.PORTFOLIO, Const.LIGHTBLUE, true, true),
+        new Button(new Rect(Const.TRADE_BUTTON_X, Const.DISPLAY_BUTTONS_Y, Const.DARKBLUE, Const.DISPLAY_BUTTONS_WIDTH, Const.DISPLAY_BUTTONS_HEIGHT), new Text(Const.TRADE_BUTTON_X, Const.DISPLAY_BUTTONS_Y, Const.TRADE, Const.OPENSANS_BOLD_S, Const.WHITE, true), MouseEvent.MOUSE_CLICKED, Const.TRADE, Const.LIGHTBLUE, true, true),
+        new Button(new Rect(Const.CREATORS_BUTTON_X, Const.DISPLAY_BUTTONS_Y, Const.DARKBLUE, Const.DISPLAY_BUTTONS_WIDTH, Const.DISPLAY_BUTTONS_HEIGHT), new Text(Const.CREATORS_BUTTON_X, Const.DISPLAY_BUTTONS_Y, Const.CREATORS, Const.OPENSANS_BOLD_S, Const.WHITE, true), MouseEvent.MOUSE_CLICKED, Const.CREATORS, Const.LIGHTBLUE, true, true),
+        new Button(new Rect(Const.ABOUT_BUTTON_X, Const.DISPLAY_BUTTONS_Y, Const.DARKBLUE, Const.DISPLAY_BUTTONS_WIDTH, Const.DISPLAY_BUTTONS_HEIGHT), new Text(Const.ABOUT_BUTTON_X, Const.DISPLAY_BUTTONS_Y, Const.ABOUT, Const.OPENSANS_BOLD_S, Const.WHITE, true), MouseEvent.MOUSE_CLICKED, Const.ABOUT, Const.LIGHTBLUE, true, true),
         new Rect(50, 275, Const.DARKBLUE, 400, 150),
         new Text(70, 305, "ACCOUNT VALUE", Const.OPENSANS_BOLD_XS, Const.WHITE, true),
         new Rect(50, 450, Const.DARKBLUE, Const.WIDTH - 100, 300),
@@ -598,12 +606,12 @@ public class StockMarketSimulator {
         new Image(0, 0, Const.GUI_START_IMAGE),
         new Text(50, 15, "Stock", Const.OPENSANS_BOLD_L, Const.WHITE, true),
         new Text(185, 15, "Simulator", Const.OPENSANS_BOLD_L, Const.LIGHTBLUE, true),
-        new Button(new Rect(50, 100, Const.DARKBLUE, 100, 50), new Text(50, 100, Const.PORTFOLIO, Const.OPENSANS_BOLD_S, Const.WHITE, true), MouseEvent.MOUSE_CLICKED, Const.PORTFOLIO, Const.LIGHTBLUE, true, true),
-        new Button(new Rect(225, 100, Const.DARKBLUE, 100, 50), new Text(250, 100, Const.TRADE, Const.OPENSANS_BOLD_S, Const.WHITE, true), MouseEvent.MOUSE_CLICKED, Const.TRADE, Const.LIGHTBLUE, true, true),
-        new Button(new Rect(350, 100, Const.DARKBLUE, 100, 50), new Text(400, 100, Const.CREATORS, Const.OPENSANS_BOLD_S, Const.WHITE, true), MouseEvent.MOUSE_CLICKED, Const.CREATORS, Const.LIGHTBLUE, true, true),
-        new Button(new Rect(525, 100, Const.DARKBLUE, 100, 50), new Text(600, 100, Const.ABOUT, Const.OPENSANS_BOLD_S, Const.WHITE, true), MouseEvent.MOUSE_CLICKED, Const.ABOUT, Const.LIGHTBLUE, true, true),
+        new Button(new Rect(Const.PORTFOLIO_BUTTON_X, Const.DISPLAY_BUTTONS_Y, Const.DARKBLUE, Const.DISPLAY_BUTTONS_WIDTH, Const.DISPLAY_BUTTONS_HEIGHT), new Text(Const.PORTFOLIO_BUTTON_X, Const.DISPLAY_BUTTONS_Y, Const.PORTFOLIO, Const.OPENSANS_BOLD_S, Const.WHITE, true), MouseEvent.MOUSE_CLICKED, Const.PORTFOLIO, Const.LIGHTBLUE, true, true),
+        new Button(new Rect(Const.TRADE_BUTTON_X, Const.DISPLAY_BUTTONS_Y, Const.DARKBLUE, Const.DISPLAY_BUTTONS_WIDTH, Const.DISPLAY_BUTTONS_HEIGHT), new Text(Const.TRADE_BUTTON_X, Const.DISPLAY_BUTTONS_Y, Const.TRADE, Const.OPENSANS_BOLD_S, Const.WHITE, true), MouseEvent.MOUSE_CLICKED, Const.TRADE, Const.LIGHTBLUE, true, true),
+        new Button(new Rect(Const.CREATORS_BUTTON_X, Const.DISPLAY_BUTTONS_Y, Const.DARKBLUE, Const.DISPLAY_BUTTONS_WIDTH, Const.DISPLAY_BUTTONS_HEIGHT), new Text(Const.CREATORS_BUTTON_X, Const.DISPLAY_BUTTONS_Y, Const.CREATORS, Const.OPENSANS_BOLD_S, Const.WHITE, true), MouseEvent.MOUSE_CLICKED, Const.CREATORS, Const.LIGHTBLUE, true, true),
+        new Button(new Rect(Const.ABOUT_BUTTON_X, Const.DISPLAY_BUTTONS_Y, Const.DARKBLUE, Const.DISPLAY_BUTTONS_WIDTH, Const.DISPLAY_BUTTONS_HEIGHT), new Text(Const.ABOUT_BUTTON_X, Const.DISPLAY_BUTTONS_Y, Const.ABOUT, Const.OPENSANS_BOLD_S, Const.WHITE, true), MouseEvent.MOUSE_CLICKED, Const.ABOUT, Const.LIGHTBLUE, true, true),
         new Text(50, 245, "Symbol", Const.OPENSANS_XXS, Const.DARKGREY, true),
-        new Button(new Rect(555, 305, Const.WHITE, 100, 50), new Text(600, 100, Const.SEARCH, Const.MYRIAD_S, Const.PRIMARYBLACK, true), MouseEvent.MOUSE_CLICKED, Const.SEARCH, Const.LIGHTBLUE, true, true),
+        new Button(new Rect(555, 305, Const.WHITE, 100, 50), new Text(600, Const.DISPLAY_BUTTONS_WIDTH, Const.SEARCH, Const.MYRIAD_S, Const.PRIMARYBLACK, true), MouseEvent.MOUSE_CLICKED, Const.SEARCH, Const.LIGHTBLUE, true, true),
         new Image(555, 280, Const.SEARCH_ICON_IMAGE),
         new Text(50, 355, "Action", Const.OPENSANS_XXS, Const.DARKGREY, true),
         new Text(50, 445, "Quantity", Const.OPENSANS_XXS, Const.DARKGREY, true),
@@ -614,20 +622,20 @@ public class StockMarketSimulator {
         new Image(0, 0, Const.GUI_START_IMAGE),
         new Text(50, 15, "Stock", Const.OPENSANS_BOLD_L, Const.WHITE, true),
         new Text(185, 15, "Simulator", Const.OPENSANS_BOLD_L, Const.LIGHTBLUE, true),
-        new Button(new Rect(50, 100, Const.DARKBLUE, 100, 50), new Text(50, 100, Const.PORTFOLIO, Const.OPENSANS_BOLD_S, Const.WHITE, true), MouseEvent.MOUSE_CLICKED, Const.PORTFOLIO, Const.LIGHTBLUE, true, true),
-        new Button(new Rect(225, 100, Const.DARKBLUE, 100, 50), new Text(250, 100, Const.TRADE, Const.OPENSANS_BOLD_S, Const.WHITE, true), MouseEvent.MOUSE_CLICKED, Const.TRADE, Const.LIGHTBLUE, true, true),
-        new Button(new Rect(350, 100, Const.DARKBLUE, 100, 50), new Text(400, 100, Const.CREATORS, Const.OPENSANS_BOLD_S, Const.WHITE, true), MouseEvent.MOUSE_CLICKED, Const.CREATORS, Const.LIGHTBLUE, true, true),
-        new Button(new Rect(525, 100, Const.DARKBLUE, 100, 50), new Text(600, 100, Const.ABOUT, Const.OPENSANS_BOLD_S, Const.WHITE, true), MouseEvent.MOUSE_CLICKED, Const.ABOUT, Const.LIGHTBLUE, true, true)
+        new Button(new Rect(Const.PORTFOLIO_BUTTON_X, Const.DISPLAY_BUTTONS_Y, Const.DARKBLUE, Const.DISPLAY_BUTTONS_WIDTH, Const.DISPLAY_BUTTONS_HEIGHT), new Text(Const.PORTFOLIO_BUTTON_X, Const.DISPLAY_BUTTONS_Y, Const.PORTFOLIO, Const.OPENSANS_BOLD_S, Const.WHITE, true), MouseEvent.MOUSE_CLICKED, Const.PORTFOLIO, Const.LIGHTBLUE, true, true),
+        new Button(new Rect(Const.TRADE_BUTTON_X, Const.DISPLAY_BUTTONS_Y, Const.DARKBLUE, Const.DISPLAY_BUTTONS_WIDTH, Const.DISPLAY_BUTTONS_HEIGHT), new Text(Const.TRADE_BUTTON_X, Const.DISPLAY_BUTTONS_Y, Const.TRADE, Const.OPENSANS_BOLD_S, Const.WHITE, true), MouseEvent.MOUSE_CLICKED, Const.TRADE, Const.LIGHTBLUE, true, true),
+        new Button(new Rect(Const.CREATORS_BUTTON_X, Const.DISPLAY_BUTTONS_Y, Const.DARKBLUE, Const.DISPLAY_BUTTONS_WIDTH, Const.DISPLAY_BUTTONS_HEIGHT), new Text(Const.CREATORS_BUTTON_X, Const.DISPLAY_BUTTONS_Y, Const.CREATORS, Const.OPENSANS_BOLD_S, Const.WHITE, true), MouseEvent.MOUSE_CLICKED, Const.CREATORS, Const.LIGHTBLUE, true, true),
+        new Button(new Rect(Const.ABOUT_BUTTON_X, Const.DISPLAY_BUTTONS_Y, Const.DARKBLUE, Const.DISPLAY_BUTTONS_WIDTH, Const.DISPLAY_BUTTONS_HEIGHT), new Text(Const.ABOUT_BUTTON_X, Const.DISPLAY_BUTTONS_Y, Const.ABOUT, Const.OPENSANS_BOLD_S, Const.WHITE, true), MouseEvent.MOUSE_CLICKED, Const.ABOUT, Const.LIGHTBLUE, true, true)
     };
 
     DisplayItem[] aboutItems = {
         new Image(0, 0, Const.GUI_START_IMAGE),
         new Text(50, 15, "Stock", Const.OPENSANS_BOLD_L, Const.WHITE, true),
         new Text(185, 15, "Simulator", Const.OPENSANS_BOLD_L, Const.LIGHTBLUE, true),
-        new Button(new Rect(50, 100, Const.DARKBLUE, 100, 50), new Text(50, 100, Const.PORTFOLIO, Const.OPENSANS_BOLD_S, Const.WHITE, true), MouseEvent.MOUSE_CLICKED, Const.PORTFOLIO, Const.LIGHTBLUE, true, true),
-        new Button(new Rect(225, 100, Const.DARKBLUE, 100, 50), new Text(250, 100, Const.TRADE, Const.OPENSANS_BOLD_S, Const.WHITE, true), MouseEvent.MOUSE_CLICKED, Const.TRADE, Const.LIGHTBLUE, true, true),
-        new Button(new Rect(350, 100, Const.DARKBLUE, 100, 50), new Text(400, 100, Const.CREATORS, Const.OPENSANS_BOLD_S, Const.WHITE, true), MouseEvent.MOUSE_CLICKED, Const.CREATORS, Const.LIGHTBLUE, true, true),
-        new Button(new Rect(525, 100, Const.DARKBLUE, 100, 50), new Text(600, 100, Const.ABOUT, Const.OPENSANS_BOLD_S, Const.WHITE, true), MouseEvent.MOUSE_CLICKED, Const.ABOUT, Const.LIGHTBLUE, true, true)
+        new Button(new Rect(Const.PORTFOLIO_BUTTON_X, Const.DISPLAY_BUTTONS_Y, Const.DARKBLUE, Const.DISPLAY_BUTTONS_WIDTH, Const.DISPLAY_BUTTONS_HEIGHT), new Text(Const.PORTFOLIO_BUTTON_X, Const.DISPLAY_BUTTONS_Y, Const.PORTFOLIO, Const.OPENSANS_BOLD_S, Const.WHITE, true), MouseEvent.MOUSE_CLICKED, Const.PORTFOLIO, Const.LIGHTBLUE, true, true),
+        new Button(new Rect(Const.TRADE_BUTTON_X, Const.DISPLAY_BUTTONS_Y, Const.DARKBLUE, Const.DISPLAY_BUTTONS_WIDTH, Const.DISPLAY_BUTTONS_HEIGHT), new Text(Const.TRADE_BUTTON_X, Const.DISPLAY_BUTTONS_Y, Const.TRADE, Const.OPENSANS_BOLD_S, Const.WHITE, true), MouseEvent.MOUSE_CLICKED, Const.TRADE, Const.LIGHTBLUE, true, true),
+        new Button(new Rect(Const.CREATORS_BUTTON_X, Const.DISPLAY_BUTTONS_Y, Const.DARKBLUE, Const.DISPLAY_BUTTONS_WIDTH, Const.DISPLAY_BUTTONS_HEIGHT), new Text(Const.CREATORS_BUTTON_X, Const.DISPLAY_BUTTONS_Y, Const.CREATORS, Const.OPENSANS_BOLD_S, Const.WHITE, true), MouseEvent.MOUSE_CLICKED, Const.CREATORS, Const.LIGHTBLUE, true, true),
+        new Button(new Rect(Const.ABOUT_BUTTON_X, Const.DISPLAY_BUTTONS_Y, Const.DARKBLUE, Const.DISPLAY_BUTTONS_WIDTH, Const.DISPLAY_BUTTONS_HEIGHT), new Text(Const.ABOUT_BUTTON_X, Const.DISPLAY_BUTTONS_Y, Const.ABOUT, Const.OPENSANS_BOLD_S, Const.WHITE, true), MouseEvent.MOUSE_CLICKED, Const.ABOUT, Const.LIGHTBLUE, true, true)
     };
     //----------------------------------------------------------------------------
     public static void main(String[] args) throws IOException {

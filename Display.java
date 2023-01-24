@@ -1,14 +1,16 @@
 import java.awt.Color;
 import java.awt.Graphics;
+
 import java.util.ArrayList;
 
-import javax.swing.JFrame;
 import javax.swing.JPanel;
 
 /**
  *  Display class is a list of display items to draw together in one panel
  * 
- *  @see DisplayItem
+ *  @see        DisplayItem
+ *  @author     Reyab Saluja
+ *  @version    01/02/2022
  */
 
 public class Display extends JPanel {

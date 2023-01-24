@@ -22,6 +22,22 @@ public class Const {
     public static final String LOGIN = "LOG IN";
     public static final String SUBMIT = "SUBMIT";
 
+    //  Displays
+    public static final int PORTFOLIO_BUTTON_X = 50;
+    public static final int TRADE_BUTTON_X = 225;
+    public static final int CREATORS_BUTTON_X = 330;
+    public static final int ABOUT_BUTTON_X = 525;
+
+    public static final int DISPLAY_BUTTONS_WIDTH = 100;
+    public static final int DISPLAY_BUTTONS_HEIGHT = 50;
+
+    public static final int DISPLAY_BUTTONS_Y = 100;
+
+    public static final int LOGIN_TITLE_PART1_X = 570;
+    public static final int LOGIN_TITLE_PART2_X = 665;
+
+    public static final int LOGIN_TITLE_Y = 130;
+
     //  Fonts
     private static final Font MYRIAD = CustomFont.loadFont("Fonts/Myriad Pro Semibold.ttf", 10);
     public static final Font MYRIAD_XS = MYRIAD.deriveFont(20f);

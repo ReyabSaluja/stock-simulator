@@ -1,4 +1,9 @@
-
+/**
+ * 	The User class represents the various user's when they login to access the program
+ * 
+ * 	@author		Shawn Chen
+ * 	@version	01/20/2023
+ */
 public class User {
 	
 	private String username;

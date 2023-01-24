@@ -11,6 +11,9 @@ import java.io.IOException;
 /**
  *  Server is the class that receives the user's holding data
  *  and manages the entire user interface
+ * 
+ *  @author     Shawn Chen
+ *  @version    01/19/2022
  */
 
 public class Server {
@@ -28,6 +31,44 @@ public class Server {
         this.userList = userList;
         this.loginInfo = loginInfo;
         this.portfolioList = portfolioList;
+    }
+    //----------------------------------------------------------------------------
+    public static void main(String[] args) throws Exception {
+
+        //  Taking input for login
+        ArrayList < User > inputUsers = new ArrayList < User > ();
+        ArrayList < String > inputLogin = new ArrayList < String > ();
+        File userDatabase = new File("Server Database/USER_DATABASE.txt");
+        Scanner readUsers = new Scanner(userDatabase);
+        while (readUsers.hasNext()) {
+            String lineAt = readUsers.next();
+            inputLogin.add(lineAt);
+            String[] loginComponents = lineAt.split("/");
+            inputUsers.add(new User(loginComponents[0], loginComponents[1]));
+        }
+        readUsers.close();
+        //  Taking input for portfolio
+        ArrayList < Portfolio > inputPortfolio = new ArrayList < Portfolio > ();
+        File portfolioDatabase = new File("Server Database/PORTFOLIO_DATABASE.txt");
+        Scanner readPortfolios = new Scanner(portfolioDatabase);
+        while (readPortfolios.hasNext()) {
+            ArrayList < Holding > currentPortfolio = new ArrayList < Holding > ();
+            String lineAt = readPortfolios.next();
+            if (lineAt.equals("-")) {
+                inputPortfolio.add(new Portfolio(currentPortfolio));
+
+            } else {
+                String[] portfolioComponents = lineAt.split(":");
+                for (int i = 0; i < portfolioComponents.length; i++) {
+                    String[] holdingComponents = portfolioComponents[i].split("/");
+                    currentPortfolio.add(new Holding(holdingComponents[0], holdingComponents[1], holdingComponents[2], holdingComponents[3]));
+                }
+                inputPortfolio.add(new Portfolio(currentPortfolio));
+            }
+        }
+        readPortfolios.close();
+        Server server = new Server(inputUsers, inputLogin, inputPortfolio);
+        server.go();
     }
     //----------------------------------------------------------------------------
     public void go() throws Exception {
@@ -147,42 +188,5 @@ public class Server {
             }
         }
         //----------------------------------------------------------------------------
-        public static void main(String[] args) throws Exception {
-
-            //  Taking input for login
-            ArrayList < User > inputUsers = new ArrayList < User > ();
-            ArrayList < String > inputLogin = new ArrayList < String > ();
-            File userDatabase = new File("Server Database/USER_DATABASE.txt");
-            Scanner readUsers = new Scanner(userDatabase);
-            while (readUsers.hasNext()) {
-                String lineAt = readUsers.next();
-                inputLogin.add(lineAt);
-                String[] loginComponents = lineAt.split("/");
-                inputUsers.add(new User(loginComponents[0], loginComponents[1]));
-            }
-            readUsers.close();
-            //  Taking input for portfolio
-            ArrayList < Portfolio > inputPortfolio = new ArrayList < Portfolio > ();
-            File portfolioDatabase = new File("Server Database/PORTFOLIO_DATABASE.txt");
-            Scanner readPortfolios = new Scanner(portfolioDatabase);
-            while (readPortfolios.hasNext()) {
-                ArrayList < Holding > currentPortfolio = new ArrayList < Holding > ();
-                String lineAt = readPortfolios.next();
-                if (lineAt.equals("-")) {
-                    inputPortfolio.add(new Portfolio(currentPortfolio));
-    
-                } else {
-                    String[] portfolioComponents = lineAt.split(":");
-                    for (int i = 0; i < portfolioComponents.length; i++) {
-                        String[] holdingComponents = portfolioComponents[i].split("/");
-                        currentPortfolio.add(new Holding(holdingComponents[0], holdingComponents[1], holdingComponents[2], holdingComponents[3]));
-                    }
-                    inputPortfolio.add(new Portfolio(currentPortfolio));
-                }
-            }
-            readPortfolios.close();
-            Server server = new Server(inputUsers, inputLogin, inputPortfolio);
-            server.go();
-        }
     }
 }

@@ -4,13 +4,13 @@ import java.awt.Color;
 /**
  * The Menu class is the parent of every possible menu element.
  * 
- * @see     Menu
- * @see     Rext
- * @see     Text
- * @see     Image
- * @see     Button
- * @author  Reyab Saluja
- * @version "1.8.0_322"
+ *  @see     Menu
+ *  @see     Rext
+ *  @see     Text
+ *  @see     Image
+ *  @see     Button
+ *  @author  Reyab Saluja
+ *  @version 01/01/2022
  */
 
 public abstract class DisplayItem {

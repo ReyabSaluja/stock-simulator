@@ -7,7 +7,7 @@ import java.util.ArrayList;
  *  (buy/sell), quantity, and price 
  * 
  *  @author     Shawn Chen
- *  @version    01/22/2023
+ *  @version    01/17/2023
  */
 
 public class Holding {

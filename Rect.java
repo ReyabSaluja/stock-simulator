@@ -8,7 +8,7 @@ import java.awt.Color;
  *  @see     DisplayItem
  *  @see     Image
  *  @author  Reyab Saluja
- *  @version "01/18/2022"
+ *  @version 01/01/2022
  */
 
 public class Rect extends DisplayItem {

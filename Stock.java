@@ -11,6 +11,17 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
+/**
+ *  The stock class is what makes up each stock
+ *  Each stock has various elements such as ticker, currentPrice, change, etc.
+ * 
+ *  A stock is made up of Stock Entries
+ * 
+ *  @see        StockEntry.java
+ *  @author     Reyab Saluja
+ *  @version    01/06/2022
+ */
+
 public class Stock {
     private String ticker;
     private String price;
@@ -59,6 +70,11 @@ public class Stock {
         return this.changePercentage;
     }
 
+    /**
+     *  Retrieves the closing prices for a stock and returns them in an ArrayList.
+     * 
+     *  @return ArrayList < Double > an ArrayList of Double objects representing the closing prices for a stock
+     */
     public ArrayList < Double > getClosingPrices() {
         ArrayList < Double > closingPrices = new ArrayList < > ();
         for (int numClosingPrices = 0; numClosingPrices < this.stockEntries.size(); numClosingPrices++) {
@@ -70,7 +86,13 @@ public class Stock {
         return closingPrices;
     }
     //-----------------------------------------------------------------------------
-    //  Function to import all of the stock entries into the stock by webscraping them from Yahoo Finance
+    /**
+     *  Imports stock entries from an external webpage (Yahoo Finance) using JSoup and 
+     *  returns them as an ArrayList of StockEntry objects.
+     * 
+     *  @return             ArrayList < StockEntry > an ArrayList of StockEntry objects representing the imported stock entries
+     *  @throws IOException if there is a problem connecting to the webpage or parsing the HTML
+     */
     private ArrayList < StockEntry > importEntries() throws IOException {
         Document doc = Jsoup.connect(url).get(); //  Connecting to the webpage via JSoup
         /*
@@ -107,26 +129,5 @@ public class Stock {
             stockEntries.add(currentEntry);
         }
         return stockEntries;
-    }
-
-    private String[] importStockInfo() throws IOException {
-        Document doc = Jsoup.connect(url).get(); //  Connecting to the webpage via JSoup
-        Element header = doc.getElementById("quote-header-info");
-        // Get the stock price
-        Element priceElement = header.selectFirst("e3b14781 e59c8479");
-        String price = priceElement.text();
-
-        // Get the stock change
-        Element changeElement = header.selectFirst("Fw(500) Pstart(8px) Fz(24px)");
-        String change = changeElement.text();
-
-        // Get the stock change percentage
-        Element changePercentageElement = header.selectFirst("Fw(500) Pstart(8px) Fz(24px)");
-        String changePercentage = changePercentageElement.text();
-
-        String[] stockInfo = {this.ticker, price, change, changePercentage};
-
-        return stockInfo;
-        
     }
 }

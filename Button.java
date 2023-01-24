@@ -9,7 +9,7 @@ import java.awt.Color;
  * @see     Text
  * @see     DisplayItem
  * @author  Reyab Saluja
- * @version "1.8.0_322"
+ * @version 01/01/2023
  */
 
 public class Button extends DisplayItem {

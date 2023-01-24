@@ -3,6 +3,9 @@
  * 	
  * 	This consists of an order type (buy/sell), the ticker (AAPL for example).
  * 	the quantity, and the current price of the stock
+ * 
+ * 	@author 	Shawn Chen
+ * 	@version	01/20/2022
  */
 
 public class Order {
