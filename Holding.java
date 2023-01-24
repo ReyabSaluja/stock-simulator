@@ -61,15 +61,6 @@ public class Holding {
         this.quantity = this.quantity + order.getQuantity();
         this.holdingAmount = this.holdingAmount + order.getorderAmount();
     }
-
-    public ArrayList<String> displayPosition() {
-        ArrayList<String> components = new ArrayList<String>();
-        components.add(holdingType);
-        components.add(stock);
-        components.add(Integer.toString(quantity));
-        components.add(Double.toString(holdingAmount));
-        return components;
-    }
     //----------------------------------------------------------------------------
     //  Getter and Setters
     public String getHoldingType() {

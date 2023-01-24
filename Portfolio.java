@@ -29,9 +29,9 @@ public class Portfolio {
 	 *	is zero, if so it removes the order from the portfolio.
 	 */
     public void eliminateShellOrders() {
-        for (int i = 0; i < portfolio.size(); i++) {
-            if (portfolio.get(i).getQuantity() == 0) {
-                portfolio.remove(i);
+        for (int orderIndex = 0; orderIndex < portfolio.size(); orderIndex++) {
+            if (portfolio.get(orderIndex).getQuantity() == 0) {
+                portfolio.remove(orderIndex);
             }
         }
     }
@@ -52,9 +52,9 @@ public class Portfolio {
     public void updatePortfolio(Order order) {
 
         boolean holdingExists = false;
-        for (int i = 0; i < portfolio.size(); i++) {
-            if (portfolio.get(i).getStock().equals(order.getTicker())) {
-                portfolio.get(i).updateHolding(order);
+        for (int portfolioIndex = 0; portfolioIndex < portfolio.size(); portfolioIndex++) {
+            if (portfolio.get(portfolioIndex).getStock().equals(order.getTicker())) {
+                portfolio.get(portfolioIndex).updateHolding(order);
                 holdingExists = true;
             }
         }
@@ -74,8 +74,8 @@ public class Portfolio {
     public void deconstructPrint() {
         if (portfolio.size() > 0) {
             // String returnStr = "";
-            for (int i = 0; i < portfolio.size(); i++) {
-                Holding holdingAt = portfolio.get(i);
+            for (int portfolioIndex = 0; portfolioIndex < portfolio.size(); portfolioIndex++) {
+                Holding holdingAt = portfolio.get(portfolioIndex);
                 String returnStr = holdingAt.getHoldingType() + "/" + holdingAt.getStock() + "/" + Math.abs(holdingAt.getQuantity()) + "/" + holdingAt.getPrice() + ":";
                 System.out.print(returnStr.substring(0, returnStr.length() - 1) + "\n");
             }
@@ -90,8 +90,8 @@ public class Portfolio {
     public String deconstruct() {
         if (portfolio.size() > 0) {
             String returnStr = "";
-            for (int i = 0; i < portfolio.size(); i++) {
-                Holding holdingAt = portfolio.get(i);
+            for (int holdingIndex = 0; holdingIndex < portfolio.size(); holdingIndex++) {
+                Holding holdingAt = portfolio.get(holdingIndex);
                 returnStr += holdingAt.getHoldingType() + "/" + holdingAt.getStock() + "/" + Math.abs(holdingAt.getQuantity()) + "/" + holdingAt.getPrice() + ":";
             }
 
