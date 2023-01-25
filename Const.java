@@ -28,6 +28,10 @@ public class Const {
     public static final int CREATORS_BUTTON_X = 330;
     public static final int ABOUT_BUTTON_X = 525;
 
+    public static final int STOCK_X = 50;
+    public static final int STOCK_PART2_X = 185;
+    public static final int STOCK_Y = 15;
+
     public static final int DISPLAY_BUTTONS_WIDTH = 100;
     public static final int DISPLAY_BUTTONS_HEIGHT = 50;
 
@@ -37,6 +41,60 @@ public class Const {
     public static final int LOGIN_TITLE_PART2_X = 665;
 
     public static final int LOGIN_TITLE_Y = 130;
+
+    //  Sign In
+    public static final int LOGIN_BUTTON_BACKGROUND_X = 630;
+    public static final int LOGIN_BUTTON_BACKGROUND_Y = 450;
+
+    public static final int LOGIN_TEXT_X = 660;
+    public static final int LOGIN_TEXT_Y = 450;
+
+    public static final int SIGN_IN_TEXT_X = Const.WIDTH / 2 - 250;
+    public static final int SIGN_IN_TEXT_Y = 200;
+
+    //  Search Field
+    public static final int SEARCH_FIELD_BOUNDS_X = 50;
+    public static final int SEARCH_FIELD_BOUNDS_Y = 275;
+    public static final int SEARCH_FIELD_BOUNDS_WIDTH = 500;
+    public static final int SEARCH_FIELD_BOUNDS_HEIGHT = 70;
+
+    //  Login Screen
+    public static final int USERNAME_BOUNDS_Y = 250;
+    public static final int PASSWORD_BOUNDS_Y = 350;
+
+    public static final int USERNAME_PASSWORD_BOUNDS_X = Const.WIDTH / 2 - 250;
+    public static final int USERNAME_PASSWORD_BOUNDS_WIDTH = 500;
+    public static final int USERNAME_PASSWORD_BOUNDS_HEIGHT = 70;
+
+    //  Action Field
+    public static final int ACTION_FIELD_BOUNDS_X = 50;
+    public static final int ACTION_FIELD_BOUNDS_Y = 385;
+    public static final int ACTION_FIELD_BOUNDS_WIDTH = 200;
+    public static final int ACTION_FIELD_BOUNDS_HEIGHT = 50;
+
+    //  Holdings Field
+    public static final int HOLDINGS_X = 80;
+    public static final int HOLDINGS_Y = 500;
+    public static final int HOLDINGS_WIDTH = Const.WIDTH - 200;
+    public static final int HOLDINGS_HEIGHT = 200;
+
+    //  Account Value Field
+    public static final int ACCOUNT_VALUE_X = 70;
+    public static final int ACCOUNT_VALUE_Y = 325;
+    public static final int ACCOUNT_VALUE_WIDTH = 175;
+    public static final int ACCOUNT_VALUE_HEIGHT = 75;
+
+    //  About Field 
+    public static final int ABOUT_FIELD_X = 220;
+    public static final int ABOUT_FIELD_Y = 325;
+    public static final int ABOUT_FIELD_WIDTH = Const.WIDTH - 200;
+    public static final int ABOUT_FIELD_HEIGHT = 700;
+
+    //  Creators Field
+    public static final int CREATORS_FIELD_X = 250;
+    public static final int CREATORS_FIELD_Y = 325;
+    public static final int CREATORS_FIELD_WIDTH = Const.WIDTH - 200;
+    public static final int CREATORS_FIELD_HEIGHT = 700;
 
     //  Fonts
     private static final Font MYRIAD = CustomFont.loadFont("Fonts/Myriad Pro Semibold.ttf", 10);

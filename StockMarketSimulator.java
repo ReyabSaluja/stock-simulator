@@ -106,7 +106,7 @@ public class StockMarketSimulator {
         });
         //  Adding Search Field to Trade UI
         tradeUI.setLayout(null);
-        searchField.setBounds(50, 275, 500, 70);
+        searchField.setBounds(Const.SEARCH_FIELD_BOUNDS_X, Const.SEARCH_FIELD_BOUNDS_Y, Const.SEARCH_FIELD_BOUNDS_WIDTH, Const.SEARCH_FIELD_BOUNDS_HEIGHT);
         searchField.setForeground(Const.LIGHTGREY);
         searchField.setBorder(new LineBorder(Const.LIGHTBLUE, 3, true));
         tradeUI.add(searchField);
@@ -135,12 +135,12 @@ public class StockMarketSimulator {
         });
         loginUI.setLayout(null);
         //  Username Field Placement
-        usernameField.setBounds(Const.WIDTH / 2 - 250, 250, 500, 70);
+        usernameField.setBounds(Const.USERNAME_PASSWORD_BOUNDS_X, Const.USERNAME_BOUNDS_Y, Const.USERNAME_PASSWORD_BOUNDS_WIDTH, Const.USERNAME_PASSWORD_BOUNDS_HEIGHT);
         usernameField.setForeground(Const.LIGHTGREY);
         usernameField.setBorder(new LineBorder(Const.LIGHTBLUE, 3, true));
         loginUI.add(usernameField);
         //  Password Field Placement
-        passwordField.setBounds(Const.WIDTH / 2 - 250, 350, 500, 70);
+        passwordField.setBounds(Const.USERNAME_PASSWORD_BOUNDS_X, Const.PASSWORD_BOUNDS_Y, Const.USERNAME_PASSWORD_BOUNDS_WIDTH, Const.USERNAME_PASSWORD_BOUNDS_HEIGHT);
         passwordField.setForeground(Const.LIGHTGREY);
         passwordField.setBorder(new LineBorder(Const.LIGHTBLUE, 3, true));
         loginUI.add(passwordField);
@@ -151,7 +151,7 @@ public class StockMarketSimulator {
         };
         actionField = new JComboBox <String> (actions);
         //  Action Field Placement
-        actionField.setBounds(50, 385, 200, 50);
+        actionField.setBounds(Const.ACTION_FIELD_BOUNDS_X, Const.ACTION_FIELD_BOUNDS_Y, Const.ACTION_FIELD_BOUNDS_WIDTH, Const.ACTION_FIELD_BOUNDS_HEIGHT);
         actionField.setForeground(Const.PRIMARYBLACK);
         tradeUI.add(actionField);
         //  Quantity Field
@@ -175,7 +175,7 @@ public class StockMarketSimulator {
         holdings = new JTextArea();
         holdings.setEditable(false);
         holdings.setBackground(Const.DARKBLUE);
-        holdings.setBounds(80, 500, Const.WIDTH - 200, 200);
+        holdings.setBounds(Const.HOLDINGS_X, Const.HOLDINGS_Y, Const.HOLDINGS_WIDTH, Const.HOLDINGS_HEIGHT);
         holdings.setFont(Const.OPENSANS_BOLD_S);
         holdings.setForeground(Const.WHITE);
         portfolioUI.add(holdings);
@@ -183,7 +183,7 @@ public class StockMarketSimulator {
         accountValueDisplay = new JTextField();
         accountValueDisplay.setEditable(false);
         accountValueDisplay.setBackground(Const.DARKBLUE);
-        accountValueDisplay.setBounds(70, 325, 175, 75);
+        accountValueDisplay.setBounds(Const.ACCOUNT_VALUE_X, Const.ACCOUNT_VALUE_Y, Const.ACCOUNT_VALUE_WIDTH, Const.ACCOUNT_VALUE_HEIGHT);
         accountValueDisplay.setFont(Const.OPENSANS_BOLD_M);
         accountValueDisplay.setForeground(Const.WHITE);
         portfolioUI.add(accountValueDisplay);
@@ -191,7 +191,7 @@ public class StockMarketSimulator {
         aboutUI.setLayout(null);
         about = new JTextArea();
         about.setEditable(false);
-        about.setBounds(220, 325, Const.WIDTH - 200, 700);
+        about.setBounds(Const.ABOUT_FIELD_X, Const.ABOUT_FIELD_Y, Const.ABOUT_FIELD_WIDTH, Const.ABOUT_FIELD_HEIGHT);
         about.setFont(Const.OPENSANS_BOLD_S);
         about.setForeground(Const.PRIMARYBLACK);
         aboutUI.add(about);
@@ -199,7 +199,7 @@ public class StockMarketSimulator {
         creatorsUI.setLayout(null);
         creators = new JTextArea();
         creators.setEditable(false);
-        creators.setBounds(250, 325, Const.WIDTH - 200, 700);
+        creators.setBounds(Const.CREATORS_FIELD_X, Const.CREATORS_FIELD_Y, Const.CREATORS_FIELD_WIDTH, Const.CREATORS_FIELD_HEIGHT);
         creators.setFont(Const.OPENSANS_BOLD_S);
         creators.setForeground(Const.PRIMARYBLACK);
         creatorsUI.add(creators);
@@ -583,15 +583,15 @@ public class StockMarketSimulator {
         //  Login button BELOW the text fields
         new Text(Const.LOGIN_TITLE_PART1_X, Const.LOGIN_TITLE_Y, "Stock", Const.OPENSANS_BOLD_M, Const.PRIMARYBLACK, true),
         new Text(Const.LOGIN_TITLE_PART2_X, Const.LOGIN_TITLE_Y, "Simulator", Const.OPENSANS_BOLD_M, Const.DARKBLUE, true),
-        new Button(new Rect(630, 450, Const.DARKBLUE, 150, 50), new Text(60, 180, "", Const.OPENSANS_BOLD_S, Const.WHITE, true), MouseEvent.MOUSE_CLICKED, Const.LOGIN, Const.LIGHTBLUE, false, false),
-        new Text(660, 450, "Sign In", Const.OPENSANS_BOLD_S, Const.WHITE, true),
-        new Text(Const.WIDTH / 2 - 250, 200, "Log In", Const.OPENSANS_S, Const.PRIMARYBLACK, true)
+        new Button(new Rect(Const.LOGIN_BUTTON_BACKGROUND_X, Const.LOGIN_BUTTON_BACKGROUND_Y, Const.DARKBLUE, 150, 50), new Text(60, 180, "", Const.OPENSANS_BOLD_S, Const.WHITE, true), MouseEvent.MOUSE_CLICKED, Const.LOGIN, Const.LIGHTBLUE, false, false),
+        new Text(Const.LOGIN_TEXT_X, Const.LOGIN_TEXT_Y, "Sign In", Const.OPENSANS_BOLD_S, Const.WHITE, true),
+        new Text(Const.SIGN_IN_TEXT_X, Const.SIGN_IN_TEXT_Y, "Log In", Const.OPENSANS_S, Const.PRIMARYBLACK, true)
     };
 
     DisplayItem[] portfolioItems = {
         new Image(0, 0, Const.GUI_START_IMAGE),
-        new Text(50, 15, "Stock", Const.OPENSANS_BOLD_L, Const.WHITE, true),
-        new Text(185, 15, "Simulator", Const.OPENSANS_BOLD_L, Const.LIGHTBLUE, true),
+        new Text(Const.STOCK_X, Const.STOCK_Y, "Stock", Const.OPENSANS_BOLD_L, Const.WHITE, true),
+        new Text(Const.STOCK_PART2_X, Const.STOCK_Y, "Simulator", Const.OPENSANS_BOLD_L, Const.LIGHTBLUE, true),
         new Button(new Rect(Const.PORTFOLIO_BUTTON_X, Const.DISPLAY_BUTTONS_Y, Const.DARKBLUE, Const.DISPLAY_BUTTONS_WIDTH, Const.DISPLAY_BUTTONS_HEIGHT), new Text(Const.PORTFOLIO_BUTTON_X, Const.DISPLAY_BUTTONS_Y, Const.PORTFOLIO, Const.OPENSANS_BOLD_S, Const.WHITE, true), MouseEvent.MOUSE_CLICKED, Const.PORTFOLIO, Const.LIGHTBLUE, true, true),
         new Button(new Rect(Const.TRADE_BUTTON_X, Const.DISPLAY_BUTTONS_Y, Const.DARKBLUE, Const.DISPLAY_BUTTONS_WIDTH, Const.DISPLAY_BUTTONS_HEIGHT), new Text(Const.TRADE_BUTTON_X, Const.DISPLAY_BUTTONS_Y, Const.TRADE, Const.OPENSANS_BOLD_S, Const.WHITE, true), MouseEvent.MOUSE_CLICKED, Const.TRADE, Const.LIGHTBLUE, true, true),
         new Button(new Rect(Const.CREATORS_BUTTON_X, Const.DISPLAY_BUTTONS_Y, Const.DARKBLUE, Const.DISPLAY_BUTTONS_WIDTH, Const.DISPLAY_BUTTONS_HEIGHT), new Text(Const.CREATORS_BUTTON_X, Const.DISPLAY_BUTTONS_Y, Const.CREATORS, Const.OPENSANS_BOLD_S, Const.WHITE, true), MouseEvent.MOUSE_CLICKED, Const.CREATORS, Const.LIGHTBLUE, true, true),
@@ -604,8 +604,8 @@ public class StockMarketSimulator {
 
     DisplayItem[] tradeItems = {
         new Image(0, 0, Const.GUI_START_IMAGE),
-        new Text(50, 15, "Stock", Const.OPENSANS_BOLD_L, Const.WHITE, true),
-        new Text(185, 15, "Simulator", Const.OPENSANS_BOLD_L, Const.LIGHTBLUE, true),
+        new Text(Const.STOCK_X, Const.STOCK_Y, "Stock", Const.OPENSANS_BOLD_L, Const.WHITE, true),
+        new Text(Const.STOCK_PART2_X, Const.STOCK_Y, "Simulator", Const.OPENSANS_BOLD_L, Const.LIGHTBLUE, true),
         new Button(new Rect(Const.PORTFOLIO_BUTTON_X, Const.DISPLAY_BUTTONS_Y, Const.DARKBLUE, Const.DISPLAY_BUTTONS_WIDTH, Const.DISPLAY_BUTTONS_HEIGHT), new Text(Const.PORTFOLIO_BUTTON_X, Const.DISPLAY_BUTTONS_Y, Const.PORTFOLIO, Const.OPENSANS_BOLD_S, Const.WHITE, true), MouseEvent.MOUSE_CLICKED, Const.PORTFOLIO, Const.LIGHTBLUE, true, true),
         new Button(new Rect(Const.TRADE_BUTTON_X, Const.DISPLAY_BUTTONS_Y, Const.DARKBLUE, Const.DISPLAY_BUTTONS_WIDTH, Const.DISPLAY_BUTTONS_HEIGHT), new Text(Const.TRADE_BUTTON_X, Const.DISPLAY_BUTTONS_Y, Const.TRADE, Const.OPENSANS_BOLD_S, Const.WHITE, true), MouseEvent.MOUSE_CLICKED, Const.TRADE, Const.LIGHTBLUE, true, true),
         new Button(new Rect(Const.CREATORS_BUTTON_X, Const.DISPLAY_BUTTONS_Y, Const.DARKBLUE, Const.DISPLAY_BUTTONS_WIDTH, Const.DISPLAY_BUTTONS_HEIGHT), new Text(Const.CREATORS_BUTTON_X, Const.DISPLAY_BUTTONS_Y, Const.CREATORS, Const.OPENSANS_BOLD_S, Const.WHITE, true), MouseEvent.MOUSE_CLICKED, Const.CREATORS, Const.LIGHTBLUE, true, true),
@@ -620,8 +620,8 @@ public class StockMarketSimulator {
 
     DisplayItem[] creatorsItems = {
         new Image(0, 0, Const.GUI_START_IMAGE),
-        new Text(50, 15, "Stock", Const.OPENSANS_BOLD_L, Const.WHITE, true),
-        new Text(185, 15, "Simulator", Const.OPENSANS_BOLD_L, Const.LIGHTBLUE, true),
+        new Text(Const.STOCK_X, Const.STOCK_Y, "Stock", Const.OPENSANS_BOLD_L, Const.WHITE, true),
+        new Text(Const.STOCK_PART2_X, Const.STOCK_Y, "Simulator", Const.OPENSANS_BOLD_L, Const.LIGHTBLUE, true),
         new Button(new Rect(Const.PORTFOLIO_BUTTON_X, Const.DISPLAY_BUTTONS_Y, Const.DARKBLUE, Const.DISPLAY_BUTTONS_WIDTH, Const.DISPLAY_BUTTONS_HEIGHT), new Text(Const.PORTFOLIO_BUTTON_X, Const.DISPLAY_BUTTONS_Y, Const.PORTFOLIO, Const.OPENSANS_BOLD_S, Const.WHITE, true), MouseEvent.MOUSE_CLICKED, Const.PORTFOLIO, Const.LIGHTBLUE, true, true),
         new Button(new Rect(Const.TRADE_BUTTON_X, Const.DISPLAY_BUTTONS_Y, Const.DARKBLUE, Const.DISPLAY_BUTTONS_WIDTH, Const.DISPLAY_BUTTONS_HEIGHT), new Text(Const.TRADE_BUTTON_X, Const.DISPLAY_BUTTONS_Y, Const.TRADE, Const.OPENSANS_BOLD_S, Const.WHITE, true), MouseEvent.MOUSE_CLICKED, Const.TRADE, Const.LIGHTBLUE, true, true),
         new Button(new Rect(Const.CREATORS_BUTTON_X, Const.DISPLAY_BUTTONS_Y, Const.DARKBLUE, Const.DISPLAY_BUTTONS_WIDTH, Const.DISPLAY_BUTTONS_HEIGHT), new Text(Const.CREATORS_BUTTON_X, Const.DISPLAY_BUTTONS_Y, Const.CREATORS, Const.OPENSANS_BOLD_S, Const.WHITE, true), MouseEvent.MOUSE_CLICKED, Const.CREATORS, Const.LIGHTBLUE, true, true),
@@ -630,8 +630,8 @@ public class StockMarketSimulator {
 
     DisplayItem[] aboutItems = {
         new Image(0, 0, Const.GUI_START_IMAGE),
-        new Text(50, 15, "Stock", Const.OPENSANS_BOLD_L, Const.WHITE, true),
-        new Text(185, 15, "Simulator", Const.OPENSANS_BOLD_L, Const.LIGHTBLUE, true),
+        new Text(Const.STOCK_X, Const.STOCK_Y, "Stock", Const.OPENSANS_BOLD_L, Const.WHITE, true),
+        new Text(Const.STOCK_PART2_X, Const.STOCK_Y, "Simulator", Const.OPENSANS_BOLD_L, Const.LIGHTBLUE, true),
         new Button(new Rect(Const.PORTFOLIO_BUTTON_X, Const.DISPLAY_BUTTONS_Y, Const.DARKBLUE, Const.DISPLAY_BUTTONS_WIDTH, Const.DISPLAY_BUTTONS_HEIGHT), new Text(Const.PORTFOLIO_BUTTON_X, Const.DISPLAY_BUTTONS_Y, Const.PORTFOLIO, Const.OPENSANS_BOLD_S, Const.WHITE, true), MouseEvent.MOUSE_CLICKED, Const.PORTFOLIO, Const.LIGHTBLUE, true, true),
         new Button(new Rect(Const.TRADE_BUTTON_X, Const.DISPLAY_BUTTONS_Y, Const.DARKBLUE, Const.DISPLAY_BUTTONS_WIDTH, Const.DISPLAY_BUTTONS_HEIGHT), new Text(Const.TRADE_BUTTON_X, Const.DISPLAY_BUTTONS_Y, Const.TRADE, Const.OPENSANS_BOLD_S, Const.WHITE, true), MouseEvent.MOUSE_CLICKED, Const.TRADE, Const.LIGHTBLUE, true, true),
         new Button(new Rect(Const.CREATORS_BUTTON_X, Const.DISPLAY_BUTTONS_Y, Const.DARKBLUE, Const.DISPLAY_BUTTONS_WIDTH, Const.DISPLAY_BUTTONS_HEIGHT), new Text(Const.CREATORS_BUTTON_X, Const.DISPLAY_BUTTONS_Y, Const.CREATORS, Const.OPENSANS_BOLD_S, Const.WHITE, true), MouseEvent.MOUSE_CLICKED, Const.CREATORS, Const.LIGHTBLUE, true, true),
